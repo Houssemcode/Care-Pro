@@ -47,7 +47,7 @@
         </div>
     </main>
 
-    <script src="{{ resource_path('js/modules/family-bookings.js') }}"></script>
+    <script src="{{ asset('js/modules/family-bookings.js') }}"></script>
 </body>
 
 </html>

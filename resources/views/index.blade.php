@@ -17,7 +17,7 @@
 
     <!-- Tailwind CSS CDN & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ resource_path('js/tailwind-config.js') }}"></script>
+    <script src="{{ asset('js/tailwind-config.js') }}"></script>
     <style type="text/tailwindcss">
         @layer utilities {
             .text-gradient {
@@ -355,7 +355,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ resource_path('js/auth.js') }}"></script>
+    <script src="{{ asset('js/auth.js') }}"></script>
     <script>
         // Modal Flow logic for Landing Page
         const authModal = document.getElementById('auth-modal');

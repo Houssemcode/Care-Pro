@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ resource_path('js/tailwind-config.js') }}"></script>
+    <script src="{{ asset('js/tailwind-config.js') }}"></script>
     <style type="text/tailwindcss">
         body { font-family: 'Inter', sans-serif; }
         .font-display { font-family: 'Outfit', sans-serif; }

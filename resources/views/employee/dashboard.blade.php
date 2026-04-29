@@ -84,7 +84,7 @@
         </svg>
     </button>
 
-    <script src="{{ resource_path('js/modules/employee.js') }}"></script>
+    <script src="{{ asset('js/modules/employee.js') }}"></script>
 </body>
 
 </html>

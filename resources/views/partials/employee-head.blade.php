@@ -9,8 +9,8 @@
     rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="{{ resource_path('js/tailwind-config.js') }}"></script>
-<script src="{{ resource_path('js/modules/core.js') }}"></script>
+<script src="{{ asset('js/tailwind-config.js') }}"></script>
+<script src="{{ asset('js/modules/core.js') }}"></script>
 
 <style type="text/tailwindcss">
     body { font-family: 'Inter', sans-serif; }

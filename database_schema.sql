@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS care_db;
-USE care_db;
+CREATE DATABASE IF NOT EXISTS care_srv;
+USE care_srv;
 
 -- 1. Create Base User Table
 CREATE TABLE User (

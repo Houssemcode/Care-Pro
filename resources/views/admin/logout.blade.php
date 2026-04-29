@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ resource_path('js/tailwind-config.js') }}"></script>
+    <script src="{{ asset('js/tailwind-config.js') }}"></script>
     <meta http-equiv="refresh" content="3;url={{ route('admin.login') }}" />
 
     <style>

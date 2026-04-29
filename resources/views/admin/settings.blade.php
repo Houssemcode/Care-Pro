@@ -15,7 +15,7 @@
 
     <!-- Tailwind CSS CDN & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ resource_path('js/tailwind-config.js') }}"></script>
+    <script src="{{ asset('js/tailwind-config.js') }}"></script>
 
     <style type="text/tailwindcss">
         body { font-family: 'Inter', sans-serif; }

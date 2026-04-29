@@ -45,7 +45,7 @@
         </div>
     </main>
 
-    <script src="{{ resor('jsurce_path('js/modules/employee-offers.js') }}"></script>
+    <script src="{{ asset('js/modules/employee-offers.js') }}"></script>
 </body>
 
 </html>

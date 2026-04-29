@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <script src="{{ resource_path('js/modules/family.js') }}"></script>
+    <script src="{{ asset('js/modules/family.js') }}"></script>
     <script>
         document.getElementById('request-modal').addEventListener('click', function (e) { if (e.target === this) this.classList.remove('active'); });
     </script>
