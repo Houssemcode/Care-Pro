@@ -45,28 +45,42 @@
                     <p class="text-sm font-medium text-slate-500">Register a new system administrator.</p>
                 </div>
 
-                <form action="{{ route('admin.dashboard') }}" method="GET" class="space-y-4">
+                <!-- Error Display Block -->
+                @if ($errors->any())
+                    <div class="mb-5 p-4 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-semibold">
+                        <ul class="list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- The Form -->
+                <form action="{{ route('register.admin.submit') }}" method="POST" class="space-y-4">
+                    @csrf
+
                     <div class="space-y-1.5">
                         <label class="block text-sm font-semibold text-slate-700">Full Name</label>
-                        <input type="text" placeholder="Admin Name" required
+                        <input type="text" name="name" placeholder="Admin Name" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="block text-sm font-semibold text-slate-700">Email Address</label>
-                        <input type="email" placeholder="admin@careservices.com" required
+                        <input type="email" name="email" placeholder="admin@careservices.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="block text-sm font-semibold text-slate-700">Password</label>
-                        <input type="password" placeholder="••••••••" required
+                        <input type="password" name="password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="block text-sm font-semibold text-slate-700">Security Key (Master Override)</label>
-                        <input type="password" placeholder="Enter security key to allow creation" required
+                        <input type="password" name="security_key" placeholder="Enter security key to allow creation" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
@@ -77,7 +91,7 @@
                 </form>
 
                 <div class="mt-8 text-center border-t border-slate-100 pt-6">
-                    <a href="{{ route('admin.login') }}"
+                    <a href="{{ route('login') }}"
                         class="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -279,10 +279,11 @@
                 </div>
 
                 <!-- Login Form -->
-                <form id="login-form" class="space-y-4 sm:space-y-5 block">
+                <form method="POST" action="{{ route('login') }}" id="login-form" class="space-y-4 sm:space-y-5 block">
+                    @csrf
                     <div class="space-y-1">
                         <label for="login-email" class="block text-sm font-semibold text-slate-700">Email</label>
-                        <input type="email" id="login-email" placeholder="mail@example.com" required
+                        <input type="email" name="email" id="login-email" placeholder="mail@example.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
@@ -293,7 +294,7 @@
                                 class="text-xs font-semibold text-brand-600 hover:text-brand-500 transition-colors">Forgot
                                 Pwd?</a>
                         </div>
-                        <input type="password" id="login-password" placeholder="••••••••" required
+                        <input type="password" name="password" id="login-password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <button type="submit"
@@ -301,22 +302,23 @@
                         Sign In
                     </button>
                 </form>
-
+            
                 <!-- Register Form -->
-                <form id="register-form" class="space-y-4 sm:space-y-5 hidden">
+                <form method="POST" action="{{ route('register') }}" id="register-form" class="space-y-4 sm:space-y-5 hidden">
+                    @csrf
                     <div class="space-y-1">
                         <label for="reg-name" class="block text-sm font-semibold text-slate-700">Full Name</label>
-                        <input type="text" id="reg-name" placeholder="John Doe" required
+                        <input type="text" name="name" id="reg-name" placeholder="John Doe" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
                         <label for="reg-email" class="block text-sm font-semibold text-slate-700">Email Address</label>
-                        <input type="email" id="reg-email" placeholder="example@domain.com" required
+                        <input type="email" name="email" id="reg-email" placeholder="example@domain.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
                         <label for="reg-password" class="block text-sm font-semibold text-slate-700">Password</label>
-                        <input type="password" id="reg-password" placeholder="••••••••" required
+                        <input type="password" name="password" id="reg-password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 

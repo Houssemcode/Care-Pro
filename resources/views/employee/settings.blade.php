@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     @section('title', 'Account Settings')
-    @include('partials.employee-head')
+    <x-employee.head />
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    @include('partials.employee-navbar', ['active' => 'settings'])
+    <x-employee.navbar :active="'settings'" />
 
     <main class="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 page-enter">
         <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 mb-2">Account Settings</h1>

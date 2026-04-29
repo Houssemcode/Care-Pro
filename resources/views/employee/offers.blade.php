@@ -3,12 +3,12 @@
 
 <head>
     @section('title', 'My Offers')
-    @include('partials.employee-head')
+    <x-employee.head />
 </head>
 
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    @include('partials.employee-navbar', ['active' => 'offers'])
+    <x-employee.navbar :active="'offers'" />
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col page-enter">
         <div class="flex flex-col md:flex-row justify-between mb-8 sm:mb-10 gap-4">

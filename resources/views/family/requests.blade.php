@@ -3,12 +3,12 @@
 
 <head>
     @section('title', 'My Bookings')
-    @include('partials.family-head')
+    <x-family.head />
 </head>
 
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    @include('partials.family-navbar', ['active' => 'requests'])
+    <x-family.navbar :active="'requests'" />
 
     <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col page-enter">
         <div class="flex flex-col md:flex-row justify-between md:items-end mb-8 sm:mb-10 gap-4">

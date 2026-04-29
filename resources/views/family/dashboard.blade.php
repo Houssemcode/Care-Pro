@@ -3,13 +3,12 @@
 
 <head>
     @section('title', 'Available Caregivers')
-    @include('partials.family-head')
+    <x-family.head />
 </head>
 
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    @include('partials.family-navbar', ['active' => 'dashboard'])
-
+    <x-family.navbar active="dashboard" />
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col page-enter">
         <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center mb-8 sm:mb-10 gap-5">
             <div>

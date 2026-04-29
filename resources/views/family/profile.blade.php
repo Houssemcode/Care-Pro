@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     @section('title', 'My Profile')
-    @include('partials.family-head')
+    <x-family.head />
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">
 
-    @include('partials.family-navbar', ['active' => 'profile'])
+    <x-family.navbar :active="'profile'" />
 
     <main class="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 page-enter">
 

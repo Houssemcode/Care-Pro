@@ -1,4 +1,4 @@
-{{-- Family Navbar – @include('partials.family-navbar', ['active' => 'dashboard']) --}}
+@props(['active' => ''])
 <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
         {{-- Brand --}}
@@ -28,7 +28,15 @@
 
             {{-- Account Links --}}
             <a href="{{ route('family.settings') }}" class="hidden lg:block text-sm transition-colors {{ ($active ?? '') == 'settings' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Settings</a>
-            <a href="{{ route('family.logout') }}" class="hidden lg:block text-rose-500 hover:text-rose-600 font-semibold text-sm transition-colors">Logout</a>
+            <a href="{{ route('logout') }}" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="text-red-600 hover:text-red-700">
+                    Logout
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
 
             {{-- Profile Avatar --}}
             <a href="{{ route('family.profile') }}" class="flex items-center gap-2 sm:gap-3 cursor-pointer group hover:bg-slate-50 p-1 sm:p-1.5 sm:pr-4 rounded-full transition-colors border border-transparent hover:border-slate-200">
