@@ -19,15 +19,6 @@
                 <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 mb-1 sm:mb-2">Welcome Back!</h1>
                 <p class="text-sm sm:text-base text-slate-500 font-medium">Here is what's happening with your care services today.</p>
             </div>
-            <div class="flex items-center gap-3 sm:gap-4 bg-white px-4 py-2.5 rounded-2xl shadow-sm border border-slate-100 w-fit self-start lg:self-auto">
-                <div class="flex flex-col items-end">
-                    <span class="text-xs sm:text-sm font-bold text-slate-800">{{ Auth::user()->name }}</span>
-                    <span class="text-[10px] sm:text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-md mt-0.5">Caregiver</span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-slate-900 border-2 border-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] flex items-center justify-center font-bold text-white text-lg">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-                </div>
-            </div>
         </div>
 
         {{-- Quick Stats Grid --}}
@@ -136,7 +127,7 @@
                         </div>
                         <h3 class="text-xl font-display font-bold mb-2">Create New Offer</h3>
                         <p class="text-white/80 text-sm mb-6 leading-relaxed">Expand your reach by posting a new care service offer for families to find.</p>
-                        <a href="{{ route('offres.create') }}" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-white text-brand-700 font-bold rounded-xl text-sm transition-transform hover:scale-[1.02] active:scale-95 shadow-sm">
+                        <a href="{{ route('employee.offres.create') }}" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-white text-brand-700 font-bold rounded-xl text-sm transition-transform hover:scale-[1.02] active:scale-95 shadow-sm">
                             Get Started
                         </a>
                     </div>

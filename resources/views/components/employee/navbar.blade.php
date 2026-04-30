@@ -10,7 +10,8 @@
 
         {{-- Navigation --}}
         <div class="flex items-center gap-3 sm:gap-6">
-            <a href="{{ route('employee.dashboard') }}" class="hidden md:block text-sm transition-colors cursor-pointer {{ ($active ?? '') == 'dashboard' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Requests</a>
+            <a href="{{ route('employee.dashboard') }}" class="hidden md:block text-sm transition-colors cursor-pointer {{ ($active ?? '') == 'dashboard' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Dashboard</a>
+            <a href="{{ route('employee.requests') }}" class="hidden md:block text-sm transition-colors cursor-pointer {{ ($active ?? '') == 'requests' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Requests</a>
             <a href="{{ route('employee.offers') }}" class="hidden md:block text-sm transition-colors cursor-pointer {{ ($active ?? '') == 'offers' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Offers</a>
             <a href="{{ route('employee.reports') }}" class="hidden md:block text-sm transition-colors cursor-pointer {{ ($active ?? '') == 'reports' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Reports</a>
 
@@ -43,15 +44,15 @@
     <div class="md:hidden border-t border-slate-100 bg-white px-2 py-1.5 flex justify-around">
         <a href="{{ route('employee.dashboard') }}" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-xs font-bold transition-colors {{ ($active ?? '') == 'dashboard' ? 'text-brand-600' : 'text-slate-400' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Dashboard
+        </a>
+        <a href="{{ route('employee.requests') }}" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-xs font-bold transition-colors {{ ($active ?? '') == 'requests' ? 'text-brand-600' : 'text-slate-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
             Requests
         </a>
         <a href="{{ route('employee.offers') }}" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-xs font-bold transition-colors {{ ($active ?? '') == 'offers' ? 'text-brand-600' : 'text-slate-400' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             Offers
-        </a>
-        <a href="{{ route('employee.reports') }}" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-xs font-bold transition-colors {{ ($active ?? '') == 'reports' ? 'text-brand-600' : 'text-slate-400' }}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            Reports
         </a>
         <a href="{{ route('employee.profile') }}" class="flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-xs font-bold transition-colors {{ ($active ?? '') == 'profile' ? 'text-brand-600' : 'text-slate-400' }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>

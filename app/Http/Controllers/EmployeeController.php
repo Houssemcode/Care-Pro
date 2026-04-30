@@ -108,5 +108,58 @@ class EmployeeController extends Controller
 
         return back()->with('success', 'Request declined.');
     }
+    // ==========================================
+    // OFFERS MANAGEMENT
+    // ==========================================
+    public function createOffre()
+    {
+        return view('employee.offres.create');
+    }
+
+    public function storeOffre(Request $request)
+    {
+        // 1. Validate the incoming form data
+        $request->validate([
+            'service_type' => 'required|string|max:255',
+            'working_house' => 'required|string|max:255', // e.g., "Live-in" or "Live-out"
+            'address_service' => 'required|string|max:255', // Target working areas
+            'address' => 'required|string|max:255', // Caregiver's base address
+        ]);
+
+        // 2. Create the new Offer linked to the authenticated employee
+        Offre::create([
+            'employee_id' => Auth::user()->employee->id,
+            'service_type' => $request->service_type,
+            'working_house' => $request->working_house,
+            'address_service' => $request->address_service,
+            'address' => $request->address,
+        ]);
+
+        // 3. Redirect back to the dashboard with a success message
+        return redirect()->route('employee.dashboard')
+            ->with('success', 'Your new care service offer has been published successfully!');
+    }
     
+    public function offers()
+    {
+        $employeeId = Auth::user()->employee->id;
+        
+        $offers = Offre::where('employee_id', $employeeId)
+            ->latest()
+            ->get();
+
+        return view('employee.offers', compact('offers'));
+    }
+    public function reports()
+    {
+        $employeeId = Auth::user()->employee->id;
+        
+        // Fetch reports linked to this employee, loading the family relation
+        $reports = \App\Models\Report::with('family.user')
+            ->where('employee_id', $employeeId)
+            ->latest()
+            ->paginate(10);
+
+        return view('employee.reports', compact('reports'));
+    }
 }

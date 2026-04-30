@@ -60,11 +60,11 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     
     // Manage Offers
     Route::get('/offres/create', [EmployeeController::class, 'createOffre'])->name('offres.create');
-    Route::get('/offers',    function () { return view('employee.offers'); })->name('offers');
-    
+    Route::post('/offres', [EmployeeController::class, 'storeOffre'])->name('offres.store');
+    Route::get('/offers', [EmployeeController::class, 'offers'])->name('offers');    
     // Employee Pages
     Route::get('/profile',   function () { return view('employee.profile'); })->name('profile');
-    Route::get('/reports',   function () { return view('employee.reports'); })->name('reports');
+    Route::get('/reports', [EmployeeController::class, 'reports'])->name('reports');
     Route::get('/settings',  function () { return view('employee.settings'); })->name('settings');
 });
 
