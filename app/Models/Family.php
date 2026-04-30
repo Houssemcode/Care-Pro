@@ -8,4 +8,9 @@ class Family extends Model
 {
     // Add this line!
     protected $fillable = ['user_id', 'address'];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

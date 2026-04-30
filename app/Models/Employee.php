@@ -8,4 +8,9 @@ class Employee extends Model
 {
     // Add this line!
     protected $fillable = ['user_id', 'experience', 'diploma', 'status', 'description'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

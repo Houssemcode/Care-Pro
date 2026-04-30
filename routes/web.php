@@ -69,9 +69,13 @@ Route::prefix('employee')->name('employee.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');    
     Route::get('/users',     [AdminController::class, 'users'])->name('users');   
+    Route::patch('/users/{user}/approve', [AdminController::class, 'approveEmployee'])->name('admin.users.approve');
+    Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('admin.users.toggle-status');
     Route::get('/profile',   function () { return view('admin.profile'); })->name('profile');
-    Route::get('/reports',   function () { return view('admin.reports'); })->name('reports');
+    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::patch('/reports/{report}/resolve', [AdminController::class, 'resolveReport'])->name('reports.resolve');
-    Route::get('/requests',  function () { return view('admin.requests'); })->name('requests');
-    Route::get('/settings',  function () { return view('admin.settings'); })->name('settings');
+    Route::get('/requests', [AdminController::class, 'requests'])->name('requests');
+    Route::patch('/requests/{id}/assign', [AdminController::class, 'assignRequest'])->name('admin.requests.assign');
+    Route::patch('/requests/{id}/reject', [AdminController::class, 'rejectRequest'])->name('admin.requests.reject');
+    Route::get('/settings',  function () { return view('admin.settings'); })->name('settings');    
 });

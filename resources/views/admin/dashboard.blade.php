@@ -134,7 +134,7 @@
                         </path>
                     </svg>
                     <span>Dashboard</span>
-                    <span class="nav-badge" id="sidebar-pending">0</span>
+                    <span class="nav-badge" id="sidebar-pending">{{ $pendingCount }}</span>
                 </a>
                 <a href="{{ route('admin.users') }}" class="nav-item">
                     <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">

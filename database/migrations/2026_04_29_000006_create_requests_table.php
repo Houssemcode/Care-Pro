@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('family_id')->constrained('families')->onDelete('cascade');
             $table->foreignId('offre_id')->constrained('offres')->onDelete('cascade');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->enum('status', ['pending', 'assigned', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

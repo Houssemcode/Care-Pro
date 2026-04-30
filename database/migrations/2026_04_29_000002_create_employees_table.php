@@ -19,8 +19,8 @@ return new class extends Migration
             
             $table->string('experience')->nullable();
             $table->string('diploma')->nullable();
-            $table->string('status')->nullable();
             $table->string('description')->nullable();
+            $table->enum('status', ['pending', 'active', 'suspended'])->default('pending');
             $table->timestamps(); 
         });
     }

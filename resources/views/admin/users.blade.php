@@ -237,43 +237,37 @@
             </header>
 
             <!-- Filters Section -->
-            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 p-5 mb-6">
+            <form action="{{ route('admin.users') }}" method="GET" id="filter-form">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <!-- Search -->
                     <div class="md:col-span-2 relative">
-                        <div
-                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <input type="text" placeholder="Search by name, email, or ID..."
+                        <!-- ... icon ... -->
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, email, or ID..."
                             class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <!-- Role Dropdown -->
                     <div>
-                        <select
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
+                        <select name="role" onchange="this.form.submit()" class="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
                             <option value="">All Roles</option>
-                            <option value="family">Family (Client)</option>
-                            <option value="employee">Employee (Caregiver)</option>
+                            <option value="family" {{ request('role') == 'family' ? 'selected' : '' }}>Family (Client)</option>
+                            <option value="employee" {{ request('role') == 'employee' ? 'selected' : '' }}>Employee (Caregiver)</option>
                         </select>
                     </div>
 
                     <!-- Status Dropdown -->
                     <div>
-                        <select
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
+                        <select name="status" onchange="this.form.submit()" class="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
                             <option value="">All Statuses</option>
-                            <option value="active">Active</option>
-                            <option value="pending">Pending</option>
-                            <option value="suspended">Suspended</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>Suspended</option>
                         </select>
                     </div>
                 </div>
-            </div>
+            </form>
+
+            <hr class="my-4">
 
             <!-- Users Table -->
             <div
@@ -293,22 +287,26 @@
                         <tbody>
                             @foreach ($users as $user)
                                 @php
-                                    // Determine Role
-                                    $roleName = 'Family';
-                                    $roleClass = 'role-family';
-                                    $location = 'Pending Update'; // Assuming this gets added to profiles later
+                                    $location = $user->family->address ?? ($user->employee ? 'Professional Caregiver' : 'Platform Member');
+                                    // Default values for Families (who don't have a status in DB)
+                                    $displayStatus = 'active';
+                                    $badgeClass = 'badge-active';
+                                    $icon = '🟢';
 
-                                    if ($user->admin) {
-                                        $roleName = 'Admin';
-                                        $roleClass = 'bg-slate-100 text-slate-700 ring-slate-500/20'; // Gray badge
-                                    } elseif ($user->employee) {
-                                        $roleName = 'Employee';
-                                        $roleClass = 'role-employee';
-                                    } elseif ($user->family) {
-                                        $location = $user->family->address ?? 'Pending Update';
+                                    // Override if the user is an Employee
+                                    if ($user->employee) {
+                                        $displayStatus = $user->employee->status;
+                                        
+                                        $statusMap = [
+                                            'active'    => ['class' => 'badge-active',    'icon' => '🟢'],
+                                            'pending'   => ['class' => 'badge-pending',   'icon' => '🟡'],
+                                            'suspended' => ['class' => 'badge-suspended', 'icon' => '🔴'],
+                                        ];
+
+                                        $badgeClass = $statusMap[$displayStatus]['class'] ?? 'badge-active';
+                                        $icon = $statusMap[$displayStatus]['icon'] ?? '🟢';
                                     }
                                 @endphp
-
                                 <tr>
                                     <td>
                                         <span class="font-bold text-slate-500">#U-{{ $user->id }}</span>
@@ -325,7 +323,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="role-badge {{ $roleClass }} mb-1">{{ $roleName }}</span>
+                                        <span class="role-badge {{ $user->role_badge['class'] }} mb-1">{{ $user->role_badge['name'] }}</span>
                                         <div class="text-[11px] text-slate-500 font-medium">{{ $location }}</div>
                                     </td>
                                     <td class="text-sm font-medium text-slate-600">
@@ -333,24 +331,38 @@
                                         {{ $user->created_at->format('M d, Y') }}
                                     </td>
                                     <td>
-                                        <span class="badge badge-active">🟢 Active</span>
+                                        <span class="badge {{ $badgeClass }}">
+                                            {{ $icon }} {{ ucfirst($displayStatus) }}
+                                        </span>
                                     </td>
                                     <td class="text-right">
                                         <div class="flex items-center justify-end gap-2">
                                             <button class="btn-action" title="View Profile"
-                                                onclick="viewProfile('{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', '{{ strtoupper(substr($user->name, 0, 2)) }}', '{{ $roleName }}', false)">
+                                                onclick="viewProfile({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', '{{ strtoupper(substr($user->name, 0, 2)) }}', '{{ $user->role_badge['name'] }}', {{ $user->employee && $user->employee->status === 'pending' ? 'true' : 'false' }}, '{{ addslashes($user->phone ?? 'Not Provided') }}', '{{ addslashes($location) }}', '{{ addslashes($user->employee->diploma ?? 'None') }}', '{{ addslashes($user->employee->experience ?? '0') }}', '{{ addslashes($user->employee->description ?? 'No description provided.') }}')">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                             </button>
-                                            <button
-                                                class="btn-action text-rose-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50"
-                                                title="Suspend User" onclick="openConfirm('suspend', '{{ addslashes($user->name) }}')">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-                                                </svg>
-                                            </button>
+
+                                            @if ($user->employee)
+                                                @php
+                                                    $isSuspended = $user->employee->status === 'suspended';
+                                                    $actionType = $isSuspended ? 'restore' : 'suspend';
+                                                    $btnColor = $isSuspended ? 'emerald' : 'rose';
+                                                @endphp
+
+                                                <button class="btn-action text-{{ $btnColor }}-500 hover:text-{{ $btnColor }}-600 hover:border-{{ $btnColor }}-200 hover:bg-{{ $btnColor }}-50"
+                                                    title="{{ ucfirst($actionType) }} User" onclick="openConfirm('{{ $actionType }}', {{ $user->id }}, '{{ addslashes($user->name) }}')">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        @if($isSuspended)
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                        @else
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                                                        @endif
+                                                    </svg>
+                                                </button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -362,34 +374,7 @@
                     </div>
                 </div>
 
-                <!-- Pagination Mockup -->
-                <div class="py-4 px-6 border-t border-slate-100 flex items-center justify-between bg-slate-50">
-                    <span class="text-xs font-semibold text-slate-500">Showing 1-4 of 27 users</span>
-                    <div class="flex gap-1">
-                        <button
-                            class="w-8 h-8 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-400 shadow-sm disabled cursor-not-allowed">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                        </button>
-                        <button
-                            class="w-8 h-8 rounded-lg border-brand-500 bg-brand-500 text-white font-bold text-xs shadow-sm shadow-brand-500/20">1</button>
-                        <button
-                            class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-xs shadow-sm">2</button>
-                        <button
-                            class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-xs shadow-sm">3</button>
-                        <button
-                            class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
             </div>
-
         </main>
     </div>
 
@@ -418,32 +403,29 @@
                 </div>
                 <!-- Details -->
                 <div class="space-y-4">
-                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                        <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Verification
-                            Documents</h5>
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100" id="professional-info-section">
+                        <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Professional Info</h5>
                         <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                            <span class="text-sm font-medium text-slate-600">ID Card</span>
-                            <span class="badge badge-active">Verified</span>
+                            <span class="text-sm font-medium text-slate-600">Diploma</span>
+                            <span class="text-sm font-bold text-brand-600" id="profile-diploma">None</span>
                         </div>
-                        <div class="flex items-center justify-between py-2 border-b border-slate-100" id="doc-nursing"
-                            style="display: none;">
-                            <span class="text-sm font-medium text-slate-600">Nursing Certificate</span>
-                            <span class="badge badge-pending">Pending Review</span>
-                            <button class="ml-2 btn-action py-1 px-2 text-[10px]">View</button>
+                        <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                            <span class="text-sm font-medium text-slate-600">Experience</span>
+                            <span class="text-sm font-bold text-slate-700"><span id="profile-experience">0</span> Years</span>
                         </div>
-                        <div class="flex items-center justify-between py-2" id="doc-criminal" style="display: none;">
-                            <span class="text-sm font-medium text-slate-600">Criminal Record</span>
-                            <span class="badge badge-active">Verified</span>
+                        <div class="pt-3">
+                            <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Bio / Description</p>
+                            <p class="text-sm text-slate-600 leading-relaxed italic" id="profile-description">No description provided.</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
                             <p class="text-xs font-bold text-slate-400 mb-1">Phone</p>
-                            <p class="text-sm font-semibold text-slate-700">+213 555 123 456</p>
+                            <p class="text-sm font-semibold text-slate-700" id="profile-phone">+213 555 123 456</p>
                         </div>
                         <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
                             <p class="text-xs font-bold text-slate-400 mb-1">Location</p>
-                            <p class="text-sm font-semibold text-slate-700">Algiers, Algeria</p>
+                            <p class="text-sm font-semibold text-slate-700" id="profile-location">Algiers, Algeria</p>
                         </div>
                     </div>
                 </div>
@@ -534,6 +516,12 @@
         </div>
     </div>
 
+    <!-- Hidden Form for Dynamic Actions -->
+    <form id="action-form" method="POST" class="hidden">
+        @csrf
+        @method('PATCH')
+    </form>
+
     <script>
         // Sidebar Toggle
 
@@ -557,28 +545,34 @@
             document.getElementById(id).classList.remove('open');
         }
 
-        function viewProfile(name, email, initials, role, isEmployeePending) {
+        function viewProfile(id, name, email, initials, role, isEmployeePending, phone, location, diploma, experience, description) {
             document.getElementById('profile-name').textContent = name;
             document.getElementById('profile-email').textContent = email;
             document.getElementById('profile-avatar').textContent = initials;
+            document.getElementById('profile-phone').textContent = phone;
+            document.getElementById('profile-location').textContent = location;
+            document.getElementById('profile-diploma').textContent = diploma;
+            document.getElementById('profile-experience').textContent = experience;
+            document.getElementById('profile-description').textContent = description;
 
             const roleBadge = document.getElementById('profile-role');
             roleBadge.textContent = role;
             roleBadge.className = `role-badge mt-2 ${role === 'Employee' ? 'role-employee' : 'role-family'}`;
 
-            // Show employee specific docs
+            // Show employee specific info
+            const profSection = document.getElementById('professional-info-section');
             if (role === 'Employee') {
-                document.getElementById('doc-nursing').style.display = 'flex';
-                document.getElementById('doc-criminal').style.display = 'flex';
+                profSection.style.display = 'block';
             } else {
-                document.getElementById('doc-nursing').style.display = 'none';
-                document.getElementById('doc-criminal').style.display = 'none';
+                profSection.style.display = 'none';
             }
 
             const actionBtn = document.getElementById('profile-action-btn');
             if (isEmployeePending) {
                 actionBtn.style.display = 'block';
                 actionBtn.textContent = 'Approve Employee';
+                // Store the ID dynamically on the button
+                actionBtn.setAttribute('data-id', id); 
             } else {
                 actionBtn.style.display = 'none';
             }
@@ -587,12 +581,13 @@
         }
 
         function approveEmployee() {
-            closeModal('modal-profile');
-            // Toast logic could go here
-            alert("Employee Approved Successfully!");
+            const id = document.getElementById('profile-action-btn').getAttribute('data-id');
+            const form = document.getElementById('action-form');
+            form.action = `/admin/users/${id}/approve`;
+            form.submit();
         }
 
-        function openConfirm(type, name) {
+        function openConfirm(type, id, name) {
             document.getElementById('confirm-title').textContent = type === 'suspend' ? 'Suspend User' : 'Restore User';
             document.getElementById('confirm-message').textContent = type === 'suspend' ? `Are you sure you want to suspend ${name}? They will lose access to the platform.` : `Are you sure you want to restore ${name}? They will regain access to the platform.`;
 
@@ -613,12 +608,24 @@
             }
 
             btn.onclick = () => {
-                closeModal('modal-confirm');
-                alert(type === 'suspend' ? 'User Suspended' : 'User Restored');
+                const form = document.getElementById('action-form');
+                form.action = `/admin/users/${id}/toggle-status`;
+                form.submit();
             };
 
             openModal('modal-confirm');
         }
+
+        let searchTimer;
+        const searchInput = document.querySelector('input[name="search"]');
+        const filterForm = document.getElementById('filter-form');
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                filterForm.submit();
+            }, 500); // Wait 500ms after last keystroke
+        });
     </script>
 </body>
 
