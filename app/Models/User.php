@@ -28,4 +28,19 @@ class User extends Authenticatable
         'password',
         'phone', // Add your custom fields here!
     ];
+
+    public function family()
+    {
+        return $this->hasOne(Family::class);
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
 }

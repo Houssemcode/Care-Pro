@@ -174,10 +174,10 @@
                     class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition group">
                     <div
                         class="w-9 h-9 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-xs">
-                        AD</div>
+                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-white truncate">Super Admin</p>
-                        <p class="text-[11px] text-slate-500 truncate">admin@careservices.com</p>
+                        <p class="text-sm font-bold text-white truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </a>
                 <div class="mt-auto px-4 pb-6">
@@ -212,7 +212,7 @@
                 <span class="font-display font-bold text-slate-800">Users Directory</span>
                 <a href="{{ route('admin.profile') }}"
                     class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                    AD</a>
+                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</a>
             </div>
 
             <!-- Page Header -->
@@ -230,8 +230,8 @@
                         class="flex items-center gap-2 hover:bg-slate-50 p-1 pr-3 rounded-full transition cursor-pointer">
                         <div
                             class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                            AD</div>
-                        <span class="font-bold text-slate-800 text-sm">Super Admin</span>
+                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                        <span class="font-bold text-slate-800 text-sm">{{ Auth::user()->name }}</span>
                     </a>
                 </div>
             </header>
@@ -292,15 +292,31 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
+                                @php
+                                    // Determine Role
+                                    $roleName = 'Family';
+                                    $roleClass = 'role-family';
+                                    $location = 'Pending Update'; // Assuming this gets added to profiles later
+
+                                    if ($user->admin) {
+                                        $roleName = 'Admin';
+                                        $roleClass = 'bg-slate-100 text-slate-700 ring-slate-500/20'; // Gray badge
+                                    } elseif ($user->employee) {
+                                        $roleName = 'Employee';
+                                        $roleClass = 'role-employee';
+                                    } elseif ($user->family) {
+                                        $location = $user->family->address ?? 'Pending Update';
+                                    }
+                                @endphp
+
                                 <tr>
                                     <td>
                                         <span class="font-bold text-slate-500">#U-{{ $user->id }}</span>
                                     </td>
                                     <td>
                                         <div class="flex items-center gap-3">
-                                            <div
-                                                class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                                                {{ strtoupper(substr($user->name ?? 'U', 0, 2)) }}
+                                            <div class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                                {{ strtoupper(substr($user->name, 0, 2)) }}
                                             </div>
                                             <div>
                                                 <div class="font-bold text-slate-900">{{ $user->name }}</div>
@@ -309,11 +325,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="role-badge role-employee mb-1">User</span>
-                                        <div class="text-[11px] text-slate-500 font-medium">{{ $user->phone }}</div>
+                                        <span class="role-badge {{ $roleClass }} mb-1">{{ $roleName }}</span>
+                                        <div class="text-[11px] text-slate-500 font-medium">{{ $location }}</div>
                                     </td>
                                     <td class="text-sm font-medium text-slate-600">
-                                        Joined
+                                        <!-- Formats the created_at timestamp to "Jan 01, 2026" -->
+                                        {{ $user->created_at->format('M d, Y') }}
                                     </td>
                                     <td>
                                         <span class="badge badge-active">🟢 Active</span>
@@ -321,22 +338,17 @@
                                     <td class="text-right">
                                         <div class="flex items-center justify-end gap-2">
                                             <button class="btn-action" title="View Profile"
-                                                onclick="viewProfile('{{ $user->name }}', '{{ $user->email }}', '{{ strtoupper(substr($user->name ?? 'U', 0, 2)) }}', 'User', false)">
+                                                onclick="viewProfile('{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', '{{ strtoupper(substr($user->name, 0, 2)) }}', '{{ $roleName }}', false)">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                    </path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                             </button>
                                             <button
                                                 class="btn-action text-rose-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50"
-                                                title="Suspend User" onclick="openConfirm('suspend', '{{ $user->name }}')">
+                                                title="Suspend User" onclick="openConfirm('suspend', '{{ addslashes($user->name) }}')">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636">
-                                                    </path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
                                                 </svg>
                                             </button>
                                         </div>
@@ -345,6 +357,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="py-4 px-6 border-t border-slate-100 bg-slate-50">
+                        {{ $users->links() }}
+                    </div>
                 </div>
 
                 <!-- Pagination Mockup -->

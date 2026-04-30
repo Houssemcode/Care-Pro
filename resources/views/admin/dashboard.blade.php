@@ -186,10 +186,10 @@
                     class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition group">
                     <div
                         class="w-9 h-9 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-xs">
-                        AD</div>
+                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-white truncate">Super Admin</p>
-                        <p class="text-[11px] text-slate-500 truncate">admin@careservices.com</p>
+                        <p class="text-sm font-bold text-white truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </a>
                 <div class="mt-auto px-4 pb-6">
@@ -223,7 +223,7 @@
                 <span class="font-display font-bold text-slate-800">System Oversight</span>
                 <a href="{{ route('admin.profile') }}"
                     class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                    AD</a>
+                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</a>
             </div>
 
             <!-- Page Header -->
@@ -241,8 +241,8 @@
                         class="flex items-center gap-2 hover:bg-slate-50 p-1 pr-3 rounded-full transition cursor-pointer">
                         <div
                             class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                            AD</div>
-                        <span class="font-bold text-slate-800 text-sm">Super Admin</span>
+                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                        <span class="font-bold text-slate-800 text-sm">{{ Auth::user()->name }}</span>
                     </a>
                     <a href="{{ route('admin.settings') }}"
                         class="text-slate-400 hover:text-slate-700 transition p-1.5 rounded-lg hover:bg-slate-100"
@@ -269,7 +269,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-display font-extrabold text-slate-900" id="stat-pending">3</p>
+                        <p class="text-2xl font-display font-extrabold text-slate-900" id="stat-pending">{{ $pendingCount }}</p>
                         <p class="text-xs font-semibold text-slate-400">Pending</p>
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-display font-extrabold text-slate-900">12</p>
+                        <p class="text-2xl font-display font-extrabold text-slate-900">{{ $approvedCount }}</p>
                         <p class="text-xs font-semibold text-slate-400">Approved</p>
                     </div>
                 </div>
@@ -296,7 +296,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-display font-extrabold text-slate-900">2</p>
+                        <p class="text-2xl font-display font-extrabold text-slate-900">{{ $reportsCount }}</p>
                         <p class="text-xs font-semibold text-slate-400">Reports</p>
                     </div>
                 </div>
@@ -310,7 +310,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-display font-extrabold text-slate-900">27</p>
+                        <p class="text-2xl font-display font-extrabold text-slate-900">{{ $totalUsers }}</p>
                         <p class="text-xs font-semibold text-slate-400">Total Users</p>
                     </div>
                 </div>
@@ -320,17 +320,15 @@
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
                 <!-- Verification Table -->
-                <section
-                    class="xl:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col w-full">
-                    <div
-                        class="bg-gradient-to-r from-slate-50 to-white px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+                <section class="xl:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col w-full">
+                    <div class="bg-gradient-to-r from-slate-50 to-white px-6 py-5 border-b border-slate-100 flex justify-between items-center">
                         <div>
                             <h3 class="text-lg font-display font-bold text-slate-900">Pending Verifications</h3>
                             <p class="text-xs font-medium text-slate-500 mt-0.5">Approve new caregiver accounts.</p>
                         </div>
-                        <span
-                            class="bg-amber-100/50 text-amber-700 px-3 py-1.5 rounded-lg text-[11px] font-bold ring-1 ring-amber-500/20"
-                            id="pending-count">0 Pending</span>
+                        <span class="bg-amber-100/50 text-amber-700 px-3 py-1.5 rounded-lg text-[11px] font-bold ring-1 ring-amber-500/20">
+                            {{ $pendingCount }} Pending
+                        </span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar flex-1 w-full">
                         <table class="data-table">
@@ -343,24 +341,37 @@
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="verification-list">
-                                <!-- Dynamic rows via admin.js -->
+                            <tbody>
+                                @forelse ($pendingEmployees as $employee)
+                                    <tr>
+                                        <td><span class="font-bold text-slate-500">#{{ $employee->id }}</span></td>
+                                        <td><span class="font-bold text-slate-900">{{ $employee->user->name }}</span></td>
+                                        <td>{{ $employee->diploma ?? 'Awaiting Upload' }}</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td class="text-right">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <!-- Action buttons trigger the JS modal with real data -->
+                                                <button class="btn-approve" onclick="openReviewModal({{ $employee->id }}, '{{ addslashes($employee->user->name) }}', '{{ addslashes($employee->diploma ?? 'Awaiting Upload') }}')">Approve</button>
+                                                <button class="btn-reject">Reject</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-8 text-slate-500 font-medium">No pending verifications at this time.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </section>
 
                 <!-- Reports Section -->
-                <section
-                    class="xl:col-span-1 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col h-[400px] sm:h-[500px] xl:h-auto">
-                    <div
-                        class="bg-gradient-to-r from-rose-50/50 to-white px-6 py-5 border-b border-slate-100 flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 flex-shrink-0">
+                <section class="xl:col-span-1 bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col h-[400px] sm:h-[500px] xl:h-auto">
+                    <div class="bg-gradient-to-r from-rose-50/50 to-white px-6 py-5 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 flex-shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
                         </div>
                         <div>
@@ -368,11 +379,30 @@
                             <p class="text-[11px] font-medium text-slate-500 mt-0.5">Platform disputes and alerts.</p>
                         </div>
                     </div>
-                    <div id="reports-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
-                        <!-- JS injects .report-card here -->
+                    <div class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+                        @forelse ($activeReports as $report)
+                            <div class="report-card">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-sm font-bold text-slate-900">{{ $report->report_reason }}</span>
+                                    <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded uppercase tracking-wider">High</span>
+                                </div>
+                                
+                                <!-- This replaces the hardcoded names -->
+                                <p class="text-xs font-semibold text-slate-600">
+                                    {{ $report->employee->user->name ?? 'Unknown Employee' }} ↔ {{ $report->family->user->name ?? 'Unknown Family' }}
+                                </p>
+                                
+                                <p class="text-xs text-slate-500 italic mt-1 pb-2">"{{ $report->description }}"</p>
+                                
+                                <button class="mt-auto self-end px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg text-xs transition-all shadow-sm active:scale-95" onclick="openResolveConfirm({{ $report->id }})">
+                                    Resolve Issue
+                                </button>
+                            </div>
+                        @empty
+                            <div class="p-6 text-center text-slate-500 font-medium text-sm">No active reports.</div>
+                        @endforelse
                     </div>
                 </section>
-
             </div>
         </main>
     </div>
@@ -443,7 +473,10 @@
                 <button class="btn-action w-full text-white bg-emerald-500 border-emerald-500 hover:bg-emerald-600"
                     onclick="confirmResolveAction()">Mark Resolved</button>
             </div>
-            <input type="hidden" id="resolve-report-id">
+            <form id="resolve-report-form" method="POST" class="hidden">
+                @csrf
+                @method('PATCH')
+            </form>
         </div>
     </div>
 
@@ -493,9 +526,14 @@
         };
 
         window.confirmResolveAction = function () {
-            const id = parseInt(document.getElementById('resolve-report-id').value);
-            if (window.resolveReport) window.resolveReport(id);
-            closeModal('modal-confirm-resolve');
+            const id = document.getElementById('resolve-report-id').value;
+            const form = document.getElementById('resolve-report-form');
+            
+            // Dynamically set the action URL using the ID
+            form.action = `/admin/reports/${id}/resolve`;
+            
+            // Submit the form
+            form.submit();
         };
     </script>
 </body>

@@ -150,10 +150,10 @@
                     class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition group">
                     <div
                         class="w-9 h-9 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-xs">
-                        AD</div>
+                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-white truncate">Super Admin</p>
-                        <p class="text-[11px] text-slate-500 truncate">admin@careservices.com</p>
+                        <p class="text-sm font-bold text-white truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </a>
                 <div class="mt-auto px-4 pb-6">
@@ -187,7 +187,7 @@
                 <span class="font-display font-bold text-slate-800">Admin Profile</span>
                 <a href="{{ route('admin.profile') }}"
                     class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                    AD</a>
+                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</a>
             </div>
 
             <!-- Page Header -->
@@ -205,8 +205,8 @@
                         class="flex items-center gap-2 hover:bg-slate-50 p-1 pr-3 rounded-full transition cursor-pointer">
                         <div
                             class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-md">
-                            AD</div>
-                        <span class="font-bold text-slate-800 text-sm">Super Admin</span>
+                            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                        <span class="font-bold text-slate-800 text-sm">{{ Auth::user()->name }}</span>
                     </a>
                     <a href="{{ route('admin.settings') }}"
                         class="text-slate-400 hover:text-slate-700 transition p-1.5 rounded-lg hover:bg-slate-100"
@@ -228,10 +228,10 @@
                 <div class="p-8 sm:p-10 border-b border-slate-100 flex flex-col sm:flex-row items-center gap-6">
                     <div
                         class="w-24 h-24 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-white flex items-center justify-center font-bold text-2xl shadow-xl shadow-slate-900/20 flex-shrink-0">
-                        AD
+                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                     </div>
                     <div class="text-center sm:text-left">
-                        <h2 class="text-2xl font-display font-bold text-slate-900">Admin Account</h2>
+                        <h2 class="text-2xl font-display font-bold text-slate-900">{{ Auth::user()->name }}</h2>
                         <p class="text-sm font-semibold text-brand-600 mt-1">Super Administrator</p>
                         <p class="text-xs text-slate-400 mt-2">Member since Oct 2025</p>
                     </div>
@@ -242,12 +242,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1.5">
                             <label class="block text-sm font-semibold text-slate-700">Full Name</label>
-                            <input type="text" value="System Admin"
+                            <input type="text" value="{{ Auth::user()->name }}"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-sm font-semibold text-slate-700">Email Address</label>
-                            <input type="email" value="admin@careservices.com"
+                            <input type="email" value="{{ Auth::user()->email }}"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm">
                         </div>
                         <div class="space-y-1.5">

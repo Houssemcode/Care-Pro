@@ -279,7 +279,7 @@
                 </div>
 
                 <!-- Login Form -->
-                <form method="POST" action="{{ route('login') }}" id="login-form" class="space-y-4 sm:space-y-5 block">
+                <form method="POST" action="{{ route('login.submit') }}" id="login-form" class="space-y-4 sm:space-y-5 block">
                     @csrf
                     <div class="space-y-1">
                         <label for="login-email" class="block text-sm font-semibold text-slate-700">Email</label>
