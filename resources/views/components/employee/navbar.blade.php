@@ -1,4 +1,3 @@
-{{-- Employee Navbar – @include('partials.employee-navbar', ['active' => 'dashboard']) --}}
 <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
         {{-- Brand --}}
@@ -19,22 +18,22 @@
 
             {{-- Account Links --}}
             <a href="{{ route('employee.settings') }}" class="hidden lg:block text-sm transition-colors {{ ($active ?? '') == 'settings' ? 'text-brand-600 font-bold border-b-2 border-brand-500 pb-1' : 'text-slate-500 hover:text-brand-600 font-semibold' }}">Settings</a>
-            <a href="{{ route('logout') }}" 
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                class="text-red-600 hover:text-red-700">
-                    Logout
-            </a>
-
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+            
+            <form method="POST" action="{{ route('logout') }}" class="inline">
                 @csrf
+                <button type="submit" class="text-red-600 hover:text-red-700 text-sm font-semibold transition-colors">
+                    Logout
+                </button>
             </form>
 
-            {{-- Profile Avatar --}}
+            {{-- Profile Avatar (DYNAMIC) --}}
             <a href="{{ route('employee.profile') }}" class="flex items-center gap-2 sm:gap-3 cursor-pointer group hover:bg-slate-50 p-1 sm:p-1.5 sm:pr-4 rounded-full transition-colors border border-transparent hover:border-slate-200">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 border-2 border-white shadow-sm flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0 {{ ($active ?? '') == 'profile' ? 'ring-2 ring-brand-200' : '' }}">SB</div>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 border-2 border-white shadow-sm flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0 {{ ($active ?? '') == 'profile' ? 'ring-2 ring-brand-200' : '' }}">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                </div>
                 <div class="hidden sm:flex flex-col">
-                    <span class="text-sm font-semibold text-slate-800 leading-tight group-hover:text-brand-600 transition-colors whitespace-nowrap">Sonia Belkacem</span>
-                    <span class="text-xs font-medium text-slate-500">Caregiver</span>
+                    <span class="text-sm font-semibold text-slate-800 leading-tight group-hover:text-brand-600 transition-colors whitespace-nowrap">{{ Auth::user()->name }}</span>
+                    <span class="text-xs font-medium text-slate-500">{{ Auth::user()->employee->diploma ?? 'Caregiver' }}</span>
                 </div>
             </a>
         </div>

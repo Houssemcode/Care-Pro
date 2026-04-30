@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmployeeController;
 
 
 /*
@@ -54,7 +55,11 @@ Route::prefix('family')->name('family.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('employee')->name('employee.')->group(function () {
-    Route::get('/dashboard', function () { return view('employee.dashboard'); })->name('dashboard');
+    Route::get('/dashboard', [EmployeeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/requests', [EmployeeController::class, 'requests'])->name('requests');
+    Route::patch('/requests/{id}/accept', [EmployeeController::class, 'acceptRequest'])->name('requests.accept');
+    Route::patch('/requests/{id}/reject', [EmployeeController::class, 'rejectRequest'])->name('requests.reject');
+    Route::get('/offres/create', [EmployeeController::class, 'createOffre'])->name('offres.create');
     Route::get('/offers',    function () { return view('employee.offers'); })->name('offers');
     Route::get('/profile',   function () { return view('employee.profile'); })->name('profile');
     Route::get('/reports',   function () { return view('employee.reports'); })->name('reports');

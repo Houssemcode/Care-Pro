@@ -4,9 +4,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;600;700&display=swap"
-    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="{{ asset('js/tailwind-config.js') }}"></script>
@@ -48,9 +46,14 @@
     .badge { @apply inline-block px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-lg ring-1 ring-inset; }
     .badge-child { @apply bg-brand-50 text-brand-700 ring-brand-500/20; }
     .badge-elderly { @apply bg-accent-50 text-accent-700 ring-accent-500/20; }
+    
+    /* Status Badges */
+    .badge-pending { @apply bg-amber-50 text-amber-700 ring-amber-500/20; }
+    .badge-assigned { @apply bg-emerald-50 text-emerald-700 ring-emerald-500/20; }
+    .badge-rejected { @apply bg-rose-50 text-rose-700 ring-rose-500/20; }
+    
     .badge-resolved { @apply bg-emerald-50 text-emerald-700 ring-emerald-500/20; }
     .badge-open { @apply bg-amber-50 text-amber-700 ring-amber-500/20; }
-    .badge-active { @apply bg-brand-50 text-brand-700 ring-brand-500/20; }
     .badge-active { @apply bg-brand-50 text-brand-700 ring-brand-500/20; }
 
     /* ──── Buttons ──── */
@@ -63,8 +66,10 @@
     .requests-table th { @apply bg-slate-50/80 backdrop-blur pb-3 pt-4 px-4 sm:px-6 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100 sticky top-0 whitespace-nowrap; }
     .requests-table td { @apply py-4 px-4 sm:px-6 border-b border-slate-50 text-xs sm:text-sm font-medium text-slate-700; }
     .requests-table tr { @apply hover:bg-slate-50/50 transition-colors; }
-    .btn-accept { @apply px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-xl transition-all shadow-sm ring-1 ring-inset ring-brand-500/20 active:scale-95 text-xs sm:text-sm; }
-    .btn-decline { @apply px-3 sm:px-4 py-1.5 sm:py-2 bg-white hover:bg-rose-50 text-rose-600 font-bold rounded-xl transition-all shadow-sm ring-1 ring-inset ring-slate-200 hover:ring-rose-200 active:scale-95 text-xs sm:text-sm; }
+    
+    /* ──── Action Buttons (Table) ──── */
+    .btn-accept { @apply px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl transition-all shadow-sm ring-1 ring-inset ring-emerald-500/20 active:scale-95 text-xs sm:text-sm; }
+    .btn-decline { @apply px-3 sm:px-4 py-1.5 sm:py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl transition-all shadow-sm ring-1 ring-inset ring-rose-200 active:scale-95 text-xs sm:text-sm; }
 
     /* ──── Page Transitions ──── */
     .page-enter { animation: pageSlideIn 0.35s ease-out; }
