@@ -81,18 +81,36 @@ class EmployeeController extends Controller
     }
 
     // Accept a Request
-    public function acceptRequest($id)
+    // ==========================================
+    // ACCEPT A BOOKING REQUEST
+    // ==========================================
+    public function acceptRequest(Request $request, $id)
     {
+        $request->validate([
+            'price' => 'required|numeric|min:0'
+        ]);
+
         $employeeId = Auth::user()->employee->id;
 
-        $request = BookingRequest::whereHas('offre', function ($q) use ($employeeId) {
-            $q->where('employee_id', $employeeId);
-        })->findOrFail($id);
+        $bookingRequest = \App\Models\Request::where('id', $id)
+            ->whereHas('offre', function($q) use ($employeeId) {
+                $q->where('employee_id', $employeeId);
+            })->firstOrFail();
 
-        // Change status from pending to assigned
-        $request->update(['status' => 'assigned']);
+        $bookingRequest->update(['status' => 'assigned']);
 
-        return back()->with('success', 'You have accepted the care request!');
+        // Updated Model Name and added assigned_at
+        \App\Models\AssignmentService::create([
+            'family_id' => $bookingRequest->family_id,
+            'offre_id' => $bookingRequest->offre_id,
+            'price' => $request->price,
+            'assigned_at' => now(), 
+            'start_date' => $bookingRequest->start_date,
+            'end_date' => $bookingRequest->end_date,
+            'status' => 'active'
+        ]);
+
+        return back()->with('success', 'You have accepted the request and set the price at ' . $request->price . ' DA.');
     }
 
     // Reject a Request
@@ -116,28 +134,29 @@ class EmployeeController extends Controller
         return view('employee.offres.create');
     }
 
+    // ==========================================
+    // STORE A NEW OFFER
+    // ==========================================
     public function storeOffre(Request $request)
     {
-        // 1. Validate the incoming form data
         $request->validate([
-            'service_type' => 'required|string|max:255',
-            'working_house' => 'required|string|max:255', // e.g., "Live-in" or "Live-out"
-            'address_service' => 'required|string|max:255', // Target working areas
-            'address' => 'required|string|max:255', // Caregiver's base address
+            'address' => 'required|string|max:255',
+            // Strict ENUM validation:
+            'service_type' => 'required|in:"Child Care","Elderly Care"',
+            // Boolean validation (accepts true, false, 1, 0, "1", and "0"):
+            'working_house' => 'required|boolean',
+            'address_service' => 'required|string|max:255',
         ]);
 
-        // 2. Create the new Offer linked to the authenticated employee
-        Offre::create([
+        \App\Models\Offre::create([
             'employee_id' => Auth::user()->employee->id,
+            'address' => $request->address,
             'service_type' => $request->service_type,
             'working_house' => $request->working_house,
             'address_service' => $request->address_service,
-            'address' => $request->address,
         ]);
 
-        // 3. Redirect back to the dashboard with a success message
-        return redirect()->route('employee.dashboard')
-            ->with('success', 'Your new care service offer has been published successfully!');
+        return redirect()->route('employee.offers')->with('success', 'Your caregiving offer has been published!');
     }
     
     public function offers()
@@ -161,5 +180,41 @@ class EmployeeController extends Controller
             ->paginate(10);
 
         return view('employee.reports', compact('reports'));
+    }
+    public function profile()
+    {
+        $employee = Auth::user()->employee;
+        
+        // Calculate stats
+        $activeOffers = \App\Models\Offre::where('employee_id', $employee->id)->count();
+        $assignedJobs = \App\Models\Request::whereHas('offre', function($q) use ($employee) {
+            $q->where('employee_id', $employee->id);
+        })->where('status', 'assigned')->count();
+
+        return view('employee.profile', compact('employee', 'activeOffers', 'assignedJobs'));
+    }
+    // ==========================================
+    // UPLOAD VERIFICATION DOCUMENTS
+    // ==========================================
+    public function uploadDocument(Request $request)
+    {
+        $request->validate([
+            'document_type' => 'required|string|in:id_card,certificate',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
+        ]);
+
+        $employee = Auth::user()->employee;
+
+        // Store the file in the storage/app/public/documents folder
+        $path = $request->file('file')->store('documents', 'public');
+
+        // Save the record to the database
+        \App\Models\EmployeeDocument::create([
+            'employee_id' => $employee->id,
+            'document_type' => $request->document_type,
+            'file_path' => $path,
+        ]);
+
+        return back()->with('success', 'Document uploaded successfully. Awaiting Admin review.');
     }
 }

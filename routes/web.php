@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +33,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register-admin', function () {
     return view('auth.register_admin');
 })->name('register.admin');
+
+// Register Routes
 Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('register.admin.submit');
+Route::get('/forgot-password', [PasswordResetController::class, 'request'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'email'])->name('password.email');
+
+// Reset Password Routes
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'reset'])->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'update'])->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -38,11 +49,21 @@ Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:family'])->prefix('family')->name('family.')->group(function () {
-    Route::get('/dashboard', function () { return view('family.dashboard'); })->name('dashboard');
-    Route::get('/profile',   function () { return view('family.profile'); })->name('profile');
-    Route::get('/reports',   function () { return view('family.reports'); })->name('reports');
-    Route::get('/requests',  function () { return view('family.requests'); })->name('requests');
+    Route::get('/dashboard', [FamilyController::class, 'dashboard'])->name('dashboard');
+    Route::get('/browse', [FamilyController::class, 'browse'])->name('browse');
+    Route::post('/book/{offre_id}', [FamilyController::class, 'storeBooking'])->name('book.store');
+    
+    Route::get('/reports', [FamilyController::class, 'reports'])->name('reports');
+    Route::post('/reports', [FamilyController::class, 'storeReport'])->name('reports.store');
+    
+    Route::get('/requests', [FamilyController::class, 'requests'])->name('requests');
+    Route::post('/ratings', [FamilyController::class, 'storeRating'])->name('ratings.store');
+    // Settings & Profile
     Route::get('/settings',  function () { return view('family.settings'); })->name('settings');
+    Route::post('/settings/info', [SettingsController::class, 'updateInfo'])->name('settings.info');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    
+    Route::get('/profile', [FamilyController::class, 'profile'])->name('profile');
 });
 
 /*
@@ -62,10 +83,16 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::get('/offres/create', [EmployeeController::class, 'createOffre'])->name('offres.create');
     Route::post('/offres', [EmployeeController::class, 'storeOffre'])->name('offres.store');
     Route::get('/offers', [EmployeeController::class, 'offers'])->name('offers');    
+    
     // Employee Pages
-    Route::get('/profile',   function () { return view('employee.profile'); })->name('profile');
     Route::get('/reports', [EmployeeController::class, 'reports'])->name('reports');
+    
+    // Settings & Profile
     Route::get('/settings',  function () { return view('employee.settings'); })->name('settings');
+    Route::post('/settings/info', [SettingsController::class, 'updateInfo'])->name('settings.info');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::get('/profile', [EmployeeController::class, 'profile'])->name('profile');
+    Route::post('/documents/upload', [EmployeeController::class, 'uploadDocument'])->name('documents.upload');
 });
 
 /*
@@ -77,11 +104,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');    
     Route::get('/users',     [AdminController::class, 'users'])->name('users');   
     
-    // Note: Removed 'admin.' from names inside the group to prevent duplicate prefixes
     Route::patch('/users/{user}/approve', [AdminController::class, 'approveEmployee'])->name('users.approve');
     Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
-    
-    Route::get('/profile',   function () { return view('admin.profile'); })->name('profile');
     
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::patch('/reports/{report}/resolve', [AdminController::class, 'resolveReport'])->name('reports.resolve');
@@ -90,5 +114,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/requests/{id}/assign', [AdminController::class, 'assignRequest'])->name('requests.assign');
     Route::patch('/requests/{id}/reject', [AdminController::class, 'rejectRequest'])->name('requests.reject');
     
+    // Settings & Profile
     Route::get('/settings',  function () { return view('admin.settings'); })->name('settings');    
+    Route::post('/settings/info', [SettingsController::class, 'updateInfo'])->name('settings.info');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
 });

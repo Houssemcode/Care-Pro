@@ -338,12 +338,98 @@
                                     <td class="text-right">
                                         <div class="flex items-center justify-end gap-2">
                                             <button class="btn-action" title="View Profile"
-                                                onclick="viewProfile({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', '{{ strtoupper(substr($user->name, 0, 2)) }}', '{{ $user->role_badge['name'] }}', {{ $user->employee && $user->employee->status === 'pending' ? 'true' : 'false' }}, '{{ addslashes($user->phone ?? 'Not Provided') }}', '{{ addslashes($location) }}', '{{ addslashes($user->employee->diploma ?? 'None') }}', '{{ addslashes($user->employee->experience ?? '0') }}', '{{ addslashes($user->employee->description ?? 'No description provided.') }}')">
+                                                onclick="openModal('modal-profile-{{ $user->id }}')">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                             </button>
+
+                                            <!-- Profile Modal for this User -->
+                                            <div id="modal-profile-{{ $user->id }}" class="modal-overlay text-left" onclick="if(event.target===this) closeModal('modal-profile-{{ $user->id }}')">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="font-display font-bold text-lg text-slate-800">User Profile</h3>
+                                                        <button onclick="closeModal('modal-profile-{{ $user->id }}')" class="text-slate-400 hover:text-slate-600 transition">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-left">
+                                                        <div class="flex items-center gap-4 mb-6">
+                                                            <div class="w-16 h-16 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xl">
+                                                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                                                            </div>
+                                                            <div>
+                                                                <h4 class="font-bold text-xl text-slate-900">{{ $user->name }}</h4>
+                                                                <p class="text-sm text-slate-500">{{ $user->email }}</p>
+                                                                <span class="role-badge {{ $user->role_badge['class'] }} mt-2">{{ $user->role_badge['name'] }}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Details -->
+                                                        <div class="space-y-6">
+                                                            @if($user->employee)
+                                                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                                                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Professional Info</h5>
+                                                                <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                                                                    <span class="text-sm font-medium text-slate-600">Diploma</span>
+                                                                    <span class="text-sm font-bold text-brand-600">{{ $user->employee->diploma ?? 'None' }}</span>
+                                                                </div>
+                                                                <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                                                                    <span class="text-sm font-medium text-slate-600">Experience</span>
+                                                                    <span class="text-sm font-bold text-slate-700">{{ $user->employee->experience ?? '0' }} Years</span>
+                                                                </div>
+                                                                <div class="pt-3">
+                                                                    <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Bio / Description</p>
+                                                                    <p class="text-sm text-slate-600 leading-relaxed italic">{{ $user->employee->description ?? 'No description provided.' }}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            {{-- VERIFICATION DOCUMENTS --}}
+                                                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                                                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Verification Documents</h5>
+                                                                @forelse($user->employee->documents as $doc)
+                                                                    <div class="flex items-center justify-between p-4 bg-slate-900 rounded-xl mb-3 border border-slate-800">
+                                                                        <span class="font-bold text-white capitalize text-sm">
+                                                                            {{ str_replace('_', ' ', $doc->document_type) }}
+                                                                        </span>
+                                                                        
+                                                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="text-sm font-bold text-slate-300 hover:text-white transition-colors">
+                                                                            View PDF
+                                                                        </a>
+                                                                    </div>
+                                                                @empty
+                                                                    <p class="text-xs text-slate-400 italic">No documents uploaded yet.</p>
+                                                                @endforelse
+                                                            </div>
+                                                            @endif
+
+                                                            <div class="grid grid-cols-2 gap-4">
+                                                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                                                    <p class="text-xs font-bold text-slate-400 mb-1">Phone</p>
+                                                                    <p class="text-sm font-semibold text-slate-700">{{ $user->phone ?? 'Not Provided' }}</p>
+                                                                </div>
+                                                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                                                    <p class="text-xs font-bold text-slate-400 mb-1">Location</p>
+                                                                    <p class="text-sm font-semibold text-slate-700 truncate" title="{{ $location }}">{{ $location }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button onclick="closeModal('modal-profile-{{ $user->id }}')" class="btn-action">Close</button>
+                                                        @if($user->employee && $user->employee->status === 'pending')
+                                                            <form action="{{ route('admin.users.approve', $user->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn-action text-brand-600 border-brand-200 bg-brand-50 hover:bg-brand-100">Approve Employee</button>
+                                                            </form>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             @if ($user->employee)
                                                 @php
@@ -378,127 +464,6 @@
         </main>
     </div>
 
-    <!-- ════════════ MODALS ════════════ -->
-    <!-- View Profile / Review Modal -->
-    <div id="modal-profile" class="modal-overlay" onclick="if(event.target===this) closeModal('modal-profile')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="font-display font-bold text-lg text-slate-800" id="profile-modal-title">User Profile</h3>
-                <button onclick="closeModal('modal-profile')"
-                    class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg></button>
-            </div>
-            <div class="modal-body">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-16 h-16 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold text-xl"
-                        id="profile-avatar">SD</div>
-                    <div>
-                        <h4 class="font-bold text-xl text-slate-900" id="profile-name">Sarah Doe</h4>
-                        <p class="text-sm text-slate-500" id="profile-email">sarah.doe@example.com</p>
-                        <span class="role-badge role-employee mt-2" id="profile-role">Employee</span>
-                    </div>
-                </div>
-                <!-- Details -->
-                <div class="space-y-4">
-                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100" id="professional-info-section">
-                        <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Professional Info</h5>
-                        <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                            <span class="text-sm font-medium text-slate-600">Diploma</span>
-                            <span class="text-sm font-bold text-brand-600" id="profile-diploma">None</span>
-                        </div>
-                        <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                            <span class="text-sm font-medium text-slate-600">Experience</span>
-                            <span class="text-sm font-bold text-slate-700"><span id="profile-experience">0</span> Years</span>
-                        </div>
-                        <div class="pt-3">
-                            <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Bio / Description</p>
-                            <p class="text-sm text-slate-600 leading-relaxed italic" id="profile-description">No description provided.</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                            <p class="text-xs font-bold text-slate-400 mb-1">Phone</p>
-                            <p class="text-sm font-semibold text-slate-700" id="profile-phone">+213 555 123 456</p>
-                        </div>
-                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                            <p class="text-xs font-bold text-slate-400 mb-1">Location</p>
-                            <p class="text-sm font-semibold text-slate-700" id="profile-location">Algiers, Algeria</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button onclick="closeModal('modal-profile')" class="btn-action">Close</button>
-                <button class="btn-action text-brand-600 border-brand-200 bg-brand-50 hover:bg-brand-100"
-                    id="profile-action-btn" onclick="approveEmployee()">Approve Employee</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Logs Modal -->
-    <div id="modal-logs" class="modal-overlay" onclick="if(event.target===this) closeModal('modal-logs')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="font-display font-bold text-lg text-slate-800">Activity Logs</h3>
-                <button onclick="closeModal('modal-logs')" class="text-slate-400 hover:text-slate-600 transition"><svg
-                        class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg></button>
-            </div>
-            <div class="modal-body">
-                <div
-                    class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
-                    <div
-                        class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                        <div
-                            class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div
-                            class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-100 bg-white shadow-sm">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-bold text-slate-800 text-sm">Account Suspended</span>
-                                <span class="font-medium text-[10px] text-slate-400">Jan 15, 2024</span>
-                            </div>
-                            <div class="text-xs text-slate-500">Suspended by Super Admin due to platform guideline
-                                violations.</div>
-                        </div>
-                    </div>
-                    <div
-                        class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                        <div
-                            class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-100 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                </path>
-                            </svg>
-                        </div>
-                        <div
-                            class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-100 bg-white shadow-sm">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-bold text-slate-800 text-sm">Account Created</span>
-                                <span class="font-medium text-[10px] text-slate-400">Jan 02, 2024</span>
-                            </div>
-                            <div class="text-xs text-slate-500">Registered as an Employee.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button onclick="closeModal('modal-logs')" class="btn-action">Close</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Confirm Modal -->
     <div id="modal-confirm" class="modal-overlay" onclick="if(event.target===this) closeModal('modal-confirm')">
         <div class="modal-content max-w-sm">
@@ -524,7 +489,6 @@
 
     <script>
         // Sidebar Toggle
-
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('mobile-overlay');
@@ -537,54 +501,11 @@
             }
         }
 
-        // Modals Logic
         function openModal(id) {
             document.getElementById(id).classList.add('open');
         }
         function closeModal(id) {
             document.getElementById(id).classList.remove('open');
-        }
-
-        function viewProfile(id, name, email, initials, role, isEmployeePending, phone, location, diploma, experience, description) {
-            document.getElementById('profile-name').textContent = name;
-            document.getElementById('profile-email').textContent = email;
-            document.getElementById('profile-avatar').textContent = initials;
-            document.getElementById('profile-phone').textContent = phone;
-            document.getElementById('profile-location').textContent = location;
-            document.getElementById('profile-diploma').textContent = diploma;
-            document.getElementById('profile-experience').textContent = experience;
-            document.getElementById('profile-description').textContent = description;
-
-            const roleBadge = document.getElementById('profile-role');
-            roleBadge.textContent = role;
-            roleBadge.className = `role-badge mt-2 ${role === 'Employee' ? 'role-employee' : 'role-family'}`;
-
-            // Show employee specific info
-            const profSection = document.getElementById('professional-info-section');
-            if (role === 'Employee') {
-                profSection.style.display = 'block';
-            } else {
-                profSection.style.display = 'none';
-            }
-
-            const actionBtn = document.getElementById('profile-action-btn');
-            if (isEmployeePending) {
-                actionBtn.style.display = 'block';
-                actionBtn.textContent = 'Approve Employee';
-                // Store the ID dynamically on the button
-                actionBtn.setAttribute('data-id', id); 
-            } else {
-                actionBtn.style.display = 'none';
-            }
-
-            openModal('modal-profile');
-        }
-
-        function approveEmployee() {
-            const id = document.getElementById('profile-action-btn').getAttribute('data-id');
-            const form = document.getElementById('action-form');
-            form.action = `/admin/users/${id}/approve`;
-            form.submit();
         }
 
         function openConfirm(type, id, name) {

@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assignement_id')->constrained('assignement_services')->onDelete('cascade');
-            $table->string('note');
-            $table->string('comentaire'); 
-            $table->dateTime('date');
-            $table->timestamps();
+            // Link directly to the contract (AssignmentService)
+            $table->foreignId('assignment_service_id')->constrained()->onDelete('cascade');
+            
+            $table->integer('stars'); // 1 to 5
+            $table->text('comment')->nullable(); // Optional text review
+            
+            $table->timestamps(); // Automatically handles the 'date' column you had in your schema
         });
     }
-
     /**
      * Reverse the migrations.
      */

@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offres', function (Blueprint $table) {
+        Schema::create('employee_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-            $table->string('address');
-            $table->enum('service_type', ['Child Care', 'Elderly Care']);
-            $table->boolean('working_house');
-            $table->string('address_service');
+            
+            // e.g., 'id_card', 'nursing_certificate', 'background_check'
+            $table->string('document_type'); 
+            
+            // Where the file is stored on your server
+            $table->string('file_path'); 
+            
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offres');
+        Schema::dropIfExists('employee_documents');
     }
 };

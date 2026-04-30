@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Report;
 use App\Models\Request as BookingRequest;
-use App\Models\AssignementService;
+use App\Models\AssignmentService;
 
 class AdminController extends Controller
 {
@@ -55,7 +55,12 @@ class AdminController extends Controller
 
         $users = $query->latest()->paginate(10)->withQueryString();
         
-        return view('admin.users', compact('users'));
+        // Load pending employees WITH their uploaded documents
+        $pendingEmployees = \App\Models\User::whereHas('employee', function($q) {
+            $q->where('status', 'pending');
+        })->with('employee.documents')->get();
+        
+        return view('admin.users', compact('users', 'pendingEmployees'));
     }
 
     // ==========================================
@@ -91,7 +96,7 @@ class AdminController extends Controller
         $approvedCount = Employee::where('status', 'active')->count();
         $reportsCount = Report::where('status', 'active')->count();
         
-        $pendingEmployees = Employee::with('user')
+        $pendingEmployees = Employee::with(['user', 'documents'])
             ->where('status', 'pending')
             ->latest()
             ->take(10)
@@ -150,7 +155,7 @@ class AdminController extends Controller
         $booking = BookingRequest::findOrFail($id);
         
         // Create the official Assignment record
-        AssignementService::create([
+        AssignmentService::create([
             'family_id' => $booking->family_id,
             'offre_id' => $booking->offre_id,
             'assigned_at' => now(),
@@ -218,5 +223,23 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', 'Report marked as resolved successfully.');
+    }
+
+    // ==========================================
+    // ADMIN PROFILE
+    // ==========================================
+    public function profile()
+    {
+        $admin = auth()->user();
+        
+        // System Stats for the Admin Profile
+        $totalFamilies = \App\Models\Family::count();
+        $totalEmployees = \App\Models\Employee::count();
+        $totalOffres = \App\Models\Offre::count();
+        $totalRequests = BookingRequest::count();
+
+        return view('admin.profile', compact(
+            'admin', 'totalFamilies', 'totalEmployees', 'totalOffres', 'totalRequests'
+        ));
     }
 }

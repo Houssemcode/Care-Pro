@@ -34,9 +34,6 @@
                         <option value="" disabled selected>Select the type of care you offer...</option>
                         <option value="Child Care">Child Care / Babysitting</option>
                         <option value="Elderly Care">Elderly Care</option>
-                        <option value="Special Needs Care">Special Needs Care</option>
-                        <option value="Nursing / Medical Care">Nursing / Medical Care</option>
-                        <option value="Housekeeping">Housekeeping & Support</option>
                     </select>
                     @error('service_type') <p class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                 </div>
@@ -46,7 +43,7 @@
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Work Arrangement <span class="text-rose-500">*</span></label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <label class="relative flex cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm focus-within:ring-2 focus-within:ring-brand-500 hover:border-brand-300 hover:bg-brand-50 transition-colors">
-                            <input type="radio" name="working_house" value="Live-out" class="peer sr-only" required>
+                            <input type="radio" name="working_house" value="0" class="peer sr-only" required>
                             <span class="flex flex-col">
                                 <span class="block text-sm font-bold text-slate-900 mb-1 peer-checked:text-brand-700">Live-out (Shift based)</span>
                                 <span class="block text-xs text-slate-500">I will commute to the family's house for specific hours/shifts.</span>
@@ -56,7 +53,7 @@
                         </label>
                         
                         <label class="relative flex cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm focus-within:ring-2 focus-within:ring-brand-500 hover:border-brand-300 hover:bg-brand-50 transition-colors">
-                            <input type="radio" name="working_house" value="Live-in" class="peer sr-only">
+                            <input type="radio" name="working_house" value="1" class="peer sr-only">
                             <span class="flex flex-col">
                                 <span class="block text-sm font-bold text-slate-900 mb-1 peer-checked:text-brand-700">Live-in (Full time)</span>
                                 <span class="block text-xs text-slate-500">I am available to live at the family's residence.</span>

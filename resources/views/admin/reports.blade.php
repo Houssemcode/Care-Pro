@@ -173,7 +173,7 @@
                                 </td>
                                 <td class="max-w-[200px]">
                                     <span class="font-bold text-rose-600/90 text-xs">{{ $report->rapport_reason ?? $report->report_reason ?? 'Dispute' }}</span>
-                                    <p class="text-xs text-slate-500 truncate" title="{{ $report->comentaire ?? $report->description }}">{{ $report->comentaire ?? $report->description }}</p>
+                                    <p class="text-xs text-slate-500 truncate" title="{{ $report->description ?? $report->description }}">{{ $report->description ?? $report->description }}</p>
                                 </td>
                                 <td>
                                     @if($report->status === 'active')
@@ -189,7 +189,7 @@
                                             '{{ addslashes($report->family->user->name ?? 'Unknown Family') }}',
                                             '{{ addslashes($report->employee->user->name ?? 'Unknown Caregiver') }}',
                                             '{{ addslashes($report->rapport_reason ?? $report->report_reason ?? 'Dispute') }}',
-                                            '{{ addslashes(str_replace(["\r", "\n"], ' ', $report->comentaire ?? $report->description ?? '')) }}'
+                                            '{{ addslashes(str_replace(["\r", "\n"], ' ', $report->description ?? $report->description ?? '')) }}'
                                         )">
                                         View Details
                                     </button>

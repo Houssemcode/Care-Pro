@@ -65,12 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Modal Handlers
-    openModalBtn.addEventListener('click', () => modal.classList.add('active'));
-    closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', () => modal.classList.add('active'));
+    }
+    
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    }
 
     // Close modal on outside click
     window.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
+        if (modal && e.target === modal) modal.classList.remove('active');
     });
 
     // Form Submission Mock

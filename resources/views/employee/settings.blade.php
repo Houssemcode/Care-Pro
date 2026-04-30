@@ -8,43 +8,107 @@
 
     <x-employee.navbar :active="'settings'" />
 
-    <main class="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 page-enter">
-        <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 mb-2">Account Settings</h1>
-        <p class="text-sm text-slate-500 font-medium mb-8">Update your personal information and preferences.</p>
+    <main class="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col page-enter">
+        <div class="mb-8 sm:mb-10">
+            <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 mb-1 sm:mb-2">Account Settings</h1>
+            <p class="text-sm sm:text-base text-slate-500 font-medium">Manage your personal information and security preferences.</p>
+        </div>
 
-        <form class="space-y-6">
-            {{-- Personal Info --}}
-            <div class="form-section">
-                <h2 class="font-display font-bold text-lg text-slate-800 mb-5">Personal Information</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="form-label">Full Name</label><input type="text" value="Sonia Belkacem" class="form-input"></div>
-                    <div><label class="form-label">Email</label><input type="email" value="sonia.belkacem@email.com" class="form-input"></div>
-                    <div><label class="form-label">Phone Number</label><input type="tel" value="+213 555 789 012" class="form-input"></div>
-                    <div><label class="form-label">Location</label><input type="text" value="Hydra, Algiers" class="form-input"></div>
+        {{-- Notifications --}}
+        @if (session('success'))
+            <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-medium">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-sm font-medium">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <div class="space-y-8">
+            
+            {{-- Profile Information Form --}}
+            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 bg-slate-50/50">
+                    <h3 class="font-display font-bold text-lg text-slate-800">Profile Information</h3>
+                    <p class="text-xs text-slate-500 font-medium">Update your account's profile information and email address.</p>
                 </div>
+                
+                <form action="{{ route('employee.settings.info') }}" method="POST" class="p-6 space-y-5">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+                        <input type="text" name="name" value="{{ Auth::user()->name }}" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+                        <input type="email" name="email" value="{{ Auth::user()->email }}" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-all shadow-md active:scale-95">Save Changes</button>
+                    </div>
+                </form>
             </div>
 
-            {{-- Password --}}
-            <div class="form-section">
-                <h2 class="font-display font-bold text-lg text-slate-800 mb-5">Change Password</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="form-label">Current Password</label><input type="password" placeholder="••••••••" class="form-input"></div>
-                    <div><label class="form-label">New Password</label><input type="password" placeholder="••••••••" class="form-input"></div>
+            {{-- Update Password Form --}}
+            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 bg-slate-50/50">
+                    <h3 class="font-display font-bold text-lg text-slate-800">Update Password</h3>
+                    <p class="text-xs text-slate-500 font-medium">Ensure your account is using a long, random password to stay secure.</p>
                 </div>
+                
+                <form action="{{ route('employee.settings.info') }}" method="POST" class="p-6 space-y-5">
+                    @csrf
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+                            <input type="text" name="name" value="{{ Auth::user()->name }}" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+                            <input type="email" name="email" value="{{ Auth::user()->email }}" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Phone Number</label>
+                            <input type="text" name="phone" value="{{ Auth::user()->phone }}" placeholder="e.g. 0555 12 34 56"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Years of Experience</label>
+                            <input type="text" name="experience" value="{{ Auth::user()->employee->experience ?? '' }}" placeholder="e.g. 5 Years"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Highest Diploma / Certification</label>
+                        <input type="text" name="diploma" value="{{ Auth::user()->employee->diploma ?? '' }}" placeholder="e.g. Certified Nursing Assistant (CNA)"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Professional Summary</label>
+                        <textarea name="description" rows="4" placeholder="Briefly describe your caregiving style, specialties, and background..."
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 outline-none transition-all text-sm font-medium resize-none">{{ Auth::user()->employee->description ?? '' }}</textarea>
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-all shadow-md active:scale-95">Save Changes</button>
+                    </div>
+                </form>
             </div>
 
-            {{-- Danger Zone --}}
-            <div class="form-section border-rose-100">
-                <h2 class="font-display font-bold text-lg text-rose-600 mb-2">Danger Zone</h2>
-                <p class="text-xs text-slate-500 mb-4">Permanently delete your account and all associated data.</p>
-                <button type="button" onclick="UI.confirm('Account deletion requires admin approval.', () => {})" class="btn-danger">Delete My Account</button>
-            </div>
-
-            <div class="flex justify-end gap-3">
-                <a href="{{ route('employee.profile') }}" class="btn-secondary">Cancel</a>
-                <button type="submit" onclick="event.preventDefault(); UI.toast('Settings Saved!', 'success')" class="btn-primary">Save Changes</button>
-            </div>
-        </form>
+        </div>
     </main>
 </body>
 </html>

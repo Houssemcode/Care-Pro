@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignement_services', function (Blueprint $table) {
+        Schema::create('assignment_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('family_id')->constrained('families')->onDelete('cascade');
-            $table->foreignId('offre_id')->constrained('offres')->onDelete('cascade');
+            $table->foreignId('family_id')->constrained()->onDelete('cascade');
+            $table->foreignId('offre_id')->constrained()->onDelete('cascade');
+            $table->decimal('price', 8, 2)->nullable(); 
             $table->dateTime('assigned_at');
-            $table->string('price');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
             $table->timestamps();
         });
     }

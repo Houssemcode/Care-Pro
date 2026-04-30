@@ -2,21 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AssignmentService extends Model
 {
-    // Match the exact spelling of your migration table!
-    protected $table = 'assignement_services';
-    
-    // Depending on if your migration has $table->timestamps(), you may need to disable them
-    public $timestamps = false; 
+    use HasFactory;
 
     protected $fillable = [
-        'family_id', 
-        'offre_id', 
-        'assigned_at', 
-        'price'
+        'family_id',
+        'offre_id',
+        'price',
+        'assigned_at', // <-- Added this
+        'start_date',
+        'end_date',
+        'status',
+    ];
+
+    // Automatically cast these columns to Carbon date objects
+    protected $casts = [
+        'assigned_at' => 'datetime',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     // --- Relationships ---
@@ -28,5 +35,9 @@ class AssignmentService extends Model
     public function offre()
     {
         return $this->belongsTo(Offre::class);
+    }
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
     }
 }

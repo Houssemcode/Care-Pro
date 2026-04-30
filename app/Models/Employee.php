@@ -13,4 +13,8 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function documents()
+    {
+        return $this->hasMany(EmployeeDocument::class);
+    }
 }
