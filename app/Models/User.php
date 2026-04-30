@@ -49,4 +49,18 @@ class User extends Authenticatable
         if ($this->employee) return ['name' => 'Employee', 'class' => 'role-employee'];
         return ['name' => 'Family', 'class' => 'role-family'];
     }
+    public function isAdmin(): bool
+    {
+        return $this->admin !== null;
+    }
+
+    public function isEmployee(): bool
+    {
+        return $this->employee !== null;
+    }
+
+    public function isFamily(): bool
+    {
+        return $this->family !== null;
+    }
 }

@@ -28,7 +28,7 @@
         @endif
 
         {{-- Filters Section --}}
-        <form action="{{ route('dashboard') }}" method="GET" id="filter-form" class="mb-6">
+        <form action="{{ route('employee.requests') }}" method="GET" id="filter-form" class="mb-6">
             <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 p-5">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Search -->
@@ -98,7 +98,7 @@
                                     @if($req->status === 'pending')
                                         <div class="flex items-center justify-end gap-2">
                                             <!-- Reject Form -->
-                                            <form method="POST" action="{{ route('requests.reject', $req->id) }}" onsubmit="return confirm('Are you sure you want to decline this request?');">
+                                            <form method="POST" action="{{ route('employee.requests.reject', $req->id) }}" onsubmit="return confirm('Are you sure you want to decline this request?');">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 font-bold rounded-lg text-xs transition-all active:scale-95 shadow-sm">
@@ -106,7 +106,7 @@
                                                 </button>
                                             </form>
                                             <!-- Accept Form -->
-                                            <form method="POST" action="{{ route('requests.accept', $req->id) }}">
+                                            <form method="POST" action="{{ route('employee.requests.accept', $req->id) }}">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg text-xs transition-all active:scale-95 shadow-sm shadow-emerald-500/20">
@@ -152,7 +152,7 @@
     </main>
 
     {{-- FAB --}}
-    <button onclick="window.location.href='{{ route('offres.create') }}'"
+    <button onclick="window.location.href='{{ route('employee.offres.create') }}'"
         class="fixed md:bottom-10 md:right-10 bottom-[90px] right-4 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-xl shadow-slate-900/30 hover:scale-110 active:scale-95 transition-transform z-50 group"
         title="Create New Offer">
         <svg class="w-6 h-6 sm:w-8 sm:h-8 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">

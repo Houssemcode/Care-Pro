@@ -1,14 +1,32 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AssignementService extends Model
+class AssignmentService extends Model
 {
+    // Match the exact spelling of your migration table!
     protected $table = 'assignement_services';
-    public $timestamps = false; // Based on your ERD
-    protected $fillable = ['family_id', 'offre_id', 'assigned_at', 'price'];
+    
+    // Depending on if your migration has $table->timestamps(), you may need to disable them
+    public $timestamps = false; 
 
-    public function family() { return $this->belongsTo(Family::class); }
-    public function offre() { return $this->belongsTo(Offre::class); }
+    protected $fillable = [
+        'family_id', 
+        'offre_id', 
+        'assigned_at', 
+        'price'
+    ];
+
+    // --- Relationships ---
+    public function family()
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    public function offre()
+    {
+        return $this->belongsTo(Offre::class);
+    }
 }

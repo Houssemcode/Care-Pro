@@ -56,7 +56,7 @@
             </div>
 
             <!-- Pending Requests -->
-            <a href="{{ route('requests') }}" class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col relative overflow-hidden group hover:border-amber-200 transition-colors cursor-pointer">
+            <a href="{{ route('employee.requests') }}" class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col relative overflow-hidden group hover:border-amber-200 transition-colors cursor-pointer">
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
                 <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4 relative z-10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -84,7 +84,7 @@
                 <div class="bg-white rounded-2xl sm:rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex-1">
                     <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
                         <h3 class="font-display font-bold text-lg text-slate-900">Recent Assignments</h3>
-                        <a href="{{ route('requests', ['status' => 'assigned']) }}" class="text-xs font-bold text-brand-600 hover:text-brand-700 transition">View All →</a>
+                        <a href="{{ route('employee.requests', ['status' => 'assigned']) }}" class="text-xs font-bold text-brand-600 hover:text-brand-700 transition">View All →</a>
                     </div>
                     
                     <div class="overflow-x-auto w-full">
@@ -151,7 +151,7 @@
                     <div>
                         <h4 class="font-bold text-amber-900 text-sm mb-1">Action Required</h4>
                         <p class="text-amber-700 text-xs mb-3 leading-relaxed">You have {{ $pendingCount }} care request(s) waiting for your approval. Please review them promptly.</p>
-                        <a href="{{ route('requests') }}" class="text-xs font-bold text-amber-700 hover:text-amber-900 underline underline-offset-2">Review Requests</a>
+                        <a href="{{ route('employee.requests') }}" class="text-xs font-bold text-amber-700 hover:text-amber-900 underline underline-offset-2">Review Requests</a>
                     </div>
                 </div>
                 @endif

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Request as BookingRequest;
-use App\Models\AssignementService;
+use App\Models\AssignmentService;
 use App\Models\Offre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +29,7 @@ class EmployeeController extends Controller
         $activeOffersCount = Offre::where('employee_id', $employeeId)->count();
 
         // Calculate total earnings from Assignment Services
-        $totalEarnings = AssignementService::whereHas('offre', fn($q) => $q->where('employee_id', $employeeId))
+        $totalEarnings = AssignmentService::whereHas('offre', fn($q) => $q->where('employee_id', $employeeId))
             ->sum('price');
 
         // 2. Fetch Recent Upcoming Assignments
