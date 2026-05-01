@@ -10,4 +10,5 @@ class Request extends Model
 
     public function family() { return $this->belongsTo(Family::class); }
     public function offre() { return $this->belongsTo(Offre::class); }
+    public function messages() { return $this->hasMany(BookingMessage::class); }
 }

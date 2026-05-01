@@ -127,7 +127,7 @@
                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                     </span>
-                    Trusted by 1,000+ Families
+                    Trusted by {{ number_format($stats['families_joined']) }}+ Families
                 </div>
 
                 <h1
@@ -137,9 +137,28 @@
                 </h1>
 
                 <p class="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-                    The safest platform connecting families with verified, highly-qualified childcare and elderly care
+                    The safest platform connecting families with {{ number_format($stats['verified_caregivers']) }} verified, highly-qualified childcare and elderly care
                     professionals across the country.
                 </p>
+
+                <!-- Quick Search Widget -->
+                <div class="max-w-3xl mx-auto mb-12 p-2 bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-2">
+                    <div class="flex-1 flex items-center px-4 gap-3 border-b md:border-b-0 md:border-r border-slate-100">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-1.998 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <input type="text" id="quick-wilaya" placeholder="Enter your Wilaya..." class="w-full py-3 outline-none text-sm font-medium text-slate-700 bg-transparent">
+                    </div>
+                    <div class="flex-1 flex items-center px-4 gap-3">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 12a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM4 18a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg>
+                        <select id="quick-service" class="w-full py-3 outline-none text-sm font-medium text-slate-700 bg-transparent cursor-pointer">
+                            <option value="">Select Service</option>
+                            <option value="Child Care">Child Care</option>
+                            <option value="Elderly Care">Elderly Care</option>
+                        </select>
+                    </div>
+                    <button onclick="executeQuickSearch()" class="px-8 py-3 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold transition-all active:scale-95">
+                        Search
+                    </button>
+                </div>
 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                     <button onclick="openAuthModal()"
@@ -155,6 +174,7 @@
                         Apply to Work
                     </button>
                 </div>
+
             </div>
         </div>
     </section>
@@ -217,6 +237,36 @@
                         caregiver. This drives a culture of excellence and helps you select only the best professionals.
                     </p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section: Top Caregivers -->
+    <section class="py-20 bg-slate-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-4">Our Top-Rated Professionals</h2>
+                <p class="text-slate-500 font-medium">Meet some of the most trusted caregivers on our platform.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @foreach($topCaregivers as $caregiver)
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all group text-center">
+                    <div class="relative inline-block mb-4">
+                        <div class="w-20 h-20 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-xl mx-auto border-4 border-white shadow-md">
+                            {{ strtoupper(substr($caregiver->user->name, 0, 1)) }}
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-amber-400 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">
+                            ★ {{ $caregiver->avg_rating }}
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-slate-900 mb-1">{{ $caregiver->user->name }}</h3>
+                    <p class="text-xs text-slate-500 mb-4 capitalize">Verified Professional</p>
+                    <button onclick="openAuthModal()" class="w-full py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-colors">
+                        View Profile
+                    </button>
+                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -359,6 +409,25 @@
     <!-- Scripts -->
     <script src="{{ asset('js/auth.js') }}"></script>
     <script>
+        // Quick Search Logic
+        function executeQuickSearch() {
+            const wilaya = document.getElementById('quick-wilaya').value;
+            const service = document.getElementById('quick-service').value;
+
+            if (!wilaya && !service) {
+                alert('Please enter a Wilaya or select a service.');
+                return;
+            }
+
+            // Build the query string
+            const params = new URLSearchParams();
+            if (wilaya) params.append('wilaya', wilaya);
+            if (service) params.append('service_type', service);
+
+            // Redirect to browse page (Requires login, so it will redirect to login first)
+            window.location.href = `/family/browse?${params.toString()}`;
+        }
+
         // Modal Flow logic for Landing Page
         const authModal = document.getElementById('auth-modal');
         const authBox = document.getElementById('auth-box');
@@ -390,6 +459,11 @@
                 closeAuthModal();
             }
         });
+
+        // Open modal if URL is /login
+        if (window.location.pathname === '/login') {
+            openAuthModal();
+        }
     </script>
 </body>
 

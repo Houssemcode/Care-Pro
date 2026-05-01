@@ -11,10 +11,10 @@ class Offre extends Model
 
     protected $fillable = [
         'employee_id',
-        'address',
+        'wilaya',
+        'commune',
         'service_type',
         'working_house',
-        'address_service',
     ];
 
     // Automatically cast this column to a boolean

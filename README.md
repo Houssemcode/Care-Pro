@@ -1,58 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛡️ Care-Pro | Premium Caregiving Marketplace
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Care-Pro is a sophisticated, role-based ecosystem built with Laravel 11, designed to bridge the gap between families in need of specialized care and qualified professional caregivers. The platform provides a secure, verified marketplace for both **Child Care** and **Elderly Care** services.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌟 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 👨‍👩‍👧‍👦 For Families
+- **Smart Discovery**: Find qualified caregivers using distance-based searching and location filters.
+- **Seamless Booking**: Request services directly through a caregiver's offer with specific date ranges.
+- **Secure Communication**: Integrated messaging system to coordinate details with caregivers.
+- **Quality Assurance**: Rate caregivers and submit reports to ensure a high standard of care.
+- **Profile Management**: Manage home localization and personal settings for better matching.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 👩‍⚕️ For Caregivers (Employees)
+- **Professional Showcase**: Create detailed profiles including diplomas, experience, and specialized descriptions.
+- **Offer Management**: Publish service offers specifying location (Wilaya/Commune), service type, and living arrangements (Live-in/Live-out).
+- **Request Workflow**: Receive and manage service requests with the ability to accept or reject.
+- **Verification System**: Upload professional credentials for administrative validation.
+- **Availability Control**: Update profiles and offers in real-time to reflect current availability.
 
-## Learning Laravel
+### 🛡️ For Administrators
+- **Verification Engine**: Review employee documents and approve/suspend profiles to maintain platform trust.
+- **Global Oversight**: Monitor all requests, offers, and user activities from a centralized dashboard.
+- **Conflict Resolution**: Review and manage user reports to resolve disputes and maintain quality.
+- **User Governance**: Comprehensive management of users, including status toggling and profile auditing.
+- **System Configuration**: Manage global platform settings and administrative access.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Technical Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Backend**: [Laravel 11](https://laravel.com) (PHP 8.2+)
+- **Frontend**: Blade Templates, [Tailwind CSS](https://tailwindcss.com), [Vite](https://vitejs.dev)
+- **Database**: MySQL 8.0+ / MariaDB 10.3+
+- **Auth**: Custom Role-Based Access Control (RBAC) via `RoleMiddleware`
+- **Geodata**: Haversine Formula implementation for distance calculation and Google Maps integration.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🚀 Getting Started
 
+### Prerequisites
+- **PHP**: 8.2+ (with `bcmath`, `ctype`, `curl`, `dom`, `mbstring`, `openssl`, `pdo`, `tokenizer`, `xml` extensions)
+- **Composer**: Latest version
+- **Node.js**: 18.x+ (LTS)
+- **MySQL**: 8.0+ or MariaDB 10.3+
+
+### Installation
+
+1. **Clone & Install Dependencies**
+   ```bash
+   git clone <repository-url>
+   cd care-pro
+   composer install
+   npm install
+   ```
+
+2. **Environment Configuration**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Edit `.env` to configure your database credentials and set your `ADMIN_MASTER_KEY`.*
+
+3. **Database Initialization**
+   ```bash
+   php artisan migrate
+   php artisan storage:link
+   ```
+
+4. **Development Server**
+   ```bash
+   # Start the Laravel server and Vite compiler
+   composer dev 
+   ```
+   The app will be available at `http://127.0.0.1:8000`.
+
+---
+
+## 🧪 Testing with Sample Data
+
+To quickly test the platform's full functionality, we provide a comprehensive test dataset.
+
+### Load Test Data
+Run the following command to wipe the database and populate it with a realistic set of Admins, Employees, Families, Offers, and Requests:
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan migrate:fresh --seed
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Test Accounts
+| Role | Email | Password | Note |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@carepro.dz` | `password` | Full system access |
+| **Employee** | `amel@example.com` | `password` | Active caregiver profile |
+| **Family** | `ahmed@family.com` | `password` | Example family account |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📊 Database Architecture
 
-## Code of Conduct
+The system utilizes a relational schema to ensure data integrity and efficient querying:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Users**: Central identity table managing authentication and basic contact info.
+- **Admins/Employees/Families**: Role-specific tables linked to `users` via 1:1 relationships.
+- **Offres**: Detailed service offerings created by employees, linked to location and service type.
+- **Requests**: The bridge between Families and Offres, tracking booking status (`pending`, `assigned`, `rejected`).
+- **Reports/Ratings**: Feedback loop for quality control and caregiver evaluation.
+- **BookingMessages**: Secure communication logs between families and caregivers.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🔐 Security Note
+The `ADMIN_MASTER_KEY` in the `.env` file is used to authorize the creation of the first administrative account. Ensure this key is kept secret in production environments.

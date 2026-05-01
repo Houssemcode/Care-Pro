@@ -50,22 +50,39 @@ class FamilyController extends Controller
     {
         $search = $request->input('search');
         $serviceType = $request->input('service_type');
+        $wilaya = $request->input('wilaya');
+        $workingHouse = $request->input('working_house');
+        $nearby = $request->input('nearby');
 
-        // 1. Get the available service types from the database
+        // 1. Get unique filter options from the database
         $service_types = Offre::pluck('service_type')->unique()->toArray();
+        $wilayas = Offre::pluck('wilaya')->unique()->sort()->values()->toArray();
 
         // 2. Fetch offers, including the employee and user data
-        $query = Offre::with(['employee.user']);
+        $query = Offre::with(['employee.user.localization']);
 
         // Security/Quality check: Only show offers from active employees!
         $query->whereHas('employee', function ($q) {
             $q->where('status', 'active');
         });
 
-        // Apply Search (Search by caregiver name or service area)
+        // Filter out offers that have an active assignment TODAY
+        // This ensures families don't see caregivers who are currently working
+        $today = now()->toDateString();
+        $query->whereNotExists(function ($q) use ($today) {
+            $q->selectRaw(1)
+              ->from('assignment_services')
+              ->whereColumn('assignment_services.offre_id', 'offres.id')
+              ->where('status', 'active')
+              ->where('start_date', '<=', $today)
+              ->where('end_date', '>=', $today);
+        });
+
+        // Apply Text Search (caregiver name, commune, wilaya)
         $query->when($search, function ($q) use ($search) {
             $q->where(function($sub) use ($search) {
-                $sub->where('address_service', 'like', "%{$search}%")
+                $sub->where('commune', 'like', "%{$search}%")
+                    ->orWhere('wilaya', 'like', "%{$search}%")
                     ->orWhereHas('employee.user', function ($userQ) use ($search) {
                         $userQ->where('name', 'like', "%{$search}%");
                     });
@@ -77,10 +94,49 @@ class FamilyController extends Controller
             $q->where('service_type', $serviceType);
         });
 
-        $offers = $query->latest()->paginate(12)->withQueryString();
+        // Apply Wilaya Filter
+        $query->when($wilaya, function ($q) use ($wilaya) {
+            $q->where('wilaya', $wilaya);
+        });
 
-        // 3. Pass BOTH $offers and $service_types to the view!
-        return view('family.browse', compact('offers', 'service_types'));
+        // Apply Working House Filter
+        if ($workingHouse !== null && $workingHouse !== '') {
+            $query->where('working_house', (bool) $workingHouse);
+        }
+
+        // Nearby — sort by distance using the family's saved coordinates
+        $familyLoc = Auth::user()->localization;
+        $isNearby = false;
+
+        if ($nearby && $familyLoc && $familyLoc->latitude && $familyLoc->logitude) {
+            $userLat = (float) $familyLoc->latitude;
+            $userLng = (float) $familyLoc->logitude;
+            $isNearby = true;
+
+            $query->whereHas('employee.user.localization', function ($q) {
+                $q->whereRaw('latitude != 0 AND logitude != 0');
+            });
+
+            $query->selectRaw("offres.*, (
+                SELECT 6371 * acos(
+                    cos(radians(?)) * cos(radians(l.latitude))
+                    * cos(radians(l.logitude) - radians(?))
+                    + sin(radians(?)) * sin(radians(l.latitude))
+                )
+                FROM localizations l
+                JOIN users u ON u.id = l.user_id
+                JOIN employees e ON e.user_id = u.id
+                WHERE e.id = offres.employee_id
+                LIMIT 1
+            ) as distance", [$userLat, $userLng, $userLat])
+            ->orderBy('distance', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        $offers = $query->paginate(12)->withQueryString();
+
+        return view('family.browse', compact('offers', 'service_types', 'wilayas', 'familyLoc', 'isNearby'));
     }
 
     // ==========================================
@@ -122,7 +178,7 @@ class FamilyController extends Controller
         $familyId = Auth::user()->family->id;
 
         // Fetch requests and load the nested relationships needed for the view
-        $requests = BookingRequest::with(['offre.employee.user'])
+        $requests = BookingRequest::with(['offre.employee.user', 'messages.user'])
             ->where('family_id', $familyId)
             ->latest()
             ->paginate(10);
@@ -210,5 +266,39 @@ class FamilyController extends Controller
         $contract->update(['status' => 'completed']);
 
         return back()->with('success', 'Thank you! Your review has been published.');
+    }
+
+    public function employeeProfile($id)
+    {
+        $employee = \App\Models\Employee::with(['user', 'offres'])->findOrFail($id);
+        
+        // Fetch all ratings for this employee across all their offers
+        $ratings = Rating::whereHas('assignmentService.offre', function($q) use ($id) {
+            $q->where('employee_id', $id);
+        })->with('assignmentService.family.user')->latest()->get();
+
+        $averageRating = $ratings->avg('stars');
+
+        return view('family.employee_profile', compact('employee', 'ratings', 'averageRating'));
+    }
+
+    public function updateRequest(Request $request, $id)
+    {
+        $request->validate([
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $bookingRequest = BookingRequest::where('id', $id)
+            ->where('family_id', Auth::user()->family->id)
+            ->where('status', 'pending')
+            ->firstOrFail();
+
+        $bookingRequest->update([
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+
+        return back()->with('success', 'Request updated successfully.');
     }
 }

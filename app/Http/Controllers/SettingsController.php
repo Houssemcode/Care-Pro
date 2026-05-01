@@ -42,11 +42,18 @@ class SettingsController extends Controller
 
         // 2. Role-Specific Validation
         if ($user->family) {
-            $rules['address'] = 'nullable|string|max:255';
+            $rules['wilaya'] = 'required|string|max:255';
+            $rules['commune'] = 'required|string|max:255';
+            $rules['latitude'] = 'required|numeric|between:-90,90';
+            $rules['logitude'] = 'required|numeric|between:-180,180';
         } elseif ($user->employee) {
             $rules['experience'] = 'nullable|string|max:255';
             $rules['diploma'] = 'nullable|string|max:255';
             $rules['description'] = 'nullable|string|max:1000';
+            $rules['wilaya'] = 'nullable|string|max:255';
+            $rules['commune'] = 'nullable|string|max:255';
+            $rules['latitude'] = 'nullable|numeric';
+            $rules['logitude'] = 'nullable|numeric';
         }
 
         $request->validate($rules);
@@ -60,15 +67,32 @@ class SettingsController extends Controller
 
         // 4. Update the Associated Role Tables
         if ($user->family) {
-            $user->family->update([
-                'address' => $request->address
-            ]);
+            // Update localization
+            $user->localization()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'wilaya' => $request->wilaya ?? '',
+                    'commune' => $request->commune ?? '',
+                    'latitude' => $request->latitude ?? 0,
+                    'logitude' => $request->logitude ?? 0,
+                ]
+            );
         } elseif ($user->employee) {
             $user->employee->update([
                 'experience' => $request->experience,
                 'diploma' => $request->diploma,
                 'description' => $request->description,
             ]);
+            // Update localization
+            $user->localization()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'wilaya' => $request->wilaya ?? '',
+                    'commune' => $request->commune ?? '',
+                    'latitude' => $request->latitude ?? 0,
+                    'logitude' => $request->logitude ?? 0,
+                ]
+            );
         }
 
         return back()->with('success', 'Profile information updated successfully.');

@@ -13,31 +13,30 @@ h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Outfit', sans-serif; }
     height: 100vh;
     z-index: 50;
     color: #cbd5e1; /* slate-300 */
-    transition: width 0.3s ease, transform 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── Sidebar Collapsed ─── */
-.sidebar.sidebar-collapsed {
-    width: 80px;
+.sidebar-collapsed {
+    width: 80px !important;
 }
-.sidebar.sidebar-collapsed .sidebar-header-text,
-.sidebar.sidebar-collapsed .sidebar-header-logo span,
-.sidebar.sidebar-collapsed .sidebar-footer-text,
-.sidebar.sidebar-collapsed .nav-item span,
-.sidebar.sidebar-collapsed .nav-badge {
-    display: none;
-}
-.sidebar.sidebar-collapsed .nav-item {
+
+.sidebar-collapsed .nav-item {
     justify-content: center;
-    padding: 0.75rem;
+    padding: 0.75rem 0;
     margin: 0 0.5rem 0.25rem 0.5rem;
 }
-.sidebar.sidebar-collapsed .sidebar-header-logo {
-    justify-content: center;
-}
-.sidebar.sidebar-collapsed p[class*="border-b"],
-.sidebar.sidebar-collapsed div[class*="px-6"][class*="mb-3"] {
+
+.sidebar-collapsed .nav-item span {
     display: none;
+}
+
+.sidebar-collapsed .sidebar-header-text,
+.sidebar-collapsed .sidebar-footer-text {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar-header-logo {
+    margin: 0 auto;
 }
 
 @media (max-width: 1023px) {

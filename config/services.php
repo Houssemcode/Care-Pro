@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'admin' => [
+        'master_key' => env('ADMIN_MASTER_KEY'),
+    ],
+
 ];

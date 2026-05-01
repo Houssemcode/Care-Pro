@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('offres', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
-            $table->string('address');
+            $table->string('wilaya');
+            $table->string('commune');
             $table->enum('service_type', ['Child Care', 'Elderly Care']);
             $table->boolean('working_house');
-            $table->string('address_service');
             $table->timestamps();
         });
     }

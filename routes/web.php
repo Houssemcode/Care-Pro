@@ -8,23 +8,21 @@ use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SettingsController;
 
+use App\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/login', function () { 
-    return view('index'); 
-})->name('login');
+Route::get('/login', [HomeController::class, 'index'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -64,6 +62,9 @@ Route::middleware(['auth', 'role:family'])->prefix('family')->name('family.')->g
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     
     Route::get('/profile', [FamilyController::class, 'profile'])->name('profile');
+    Route::get('/employee/{id}', [FamilyController::class, 'employeeProfile'])->name('employee.profile');
+    Route::post('/requests/{id}/messages', [\App\Http\Controllers\BookingMessageController::class, 'store'])->name('requests.messages.store');
+    Route::patch('/requests/{id}', [FamilyController::class, 'updateRequest'])->name('requests.update');
 });
 
 /*
@@ -82,6 +83,8 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     // Manage Offers
     Route::get('/offres/create', [EmployeeController::class, 'createOffre'])->name('offres.create');
     Route::post('/offres', [EmployeeController::class, 'storeOffre'])->name('offres.store');
+    Route::get('/offres/{id}/edit', [EmployeeController::class, 'editOffre'])->name('offres.edit');
+    Route::patch('/offres/{id}', [EmployeeController::class, 'updateOffre'])->name('offres.update');
     Route::get('/offers', [EmployeeController::class, 'offers'])->name('offers');    
     
     // Employee Pages
@@ -93,6 +96,8 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::get('/profile', [EmployeeController::class, 'profile'])->name('profile');
     Route::post('/documents/upload', [EmployeeController::class, 'uploadDocument'])->name('documents.upload');
+    Route::post('/requests/{id}/messages', [\App\Http\Controllers\BookingMessageController::class, 'store'])->name('requests.messages.store');
+    Route::get('/family/{id}', [EmployeeController::class, 'familyProfile'])->name('family.profile');
 });
 
 /*

@@ -34,13 +34,28 @@ class AuthController extends Controller
         if ($request->role === 'family') {
             Family::create([
                 'user_id' => $user->id,
-                'address' => 'Pending update' // Default value based on your DB schema
+            ]);
+            // Create a default localization record for the user
+            \App\Models\Localization::create([
+                'user_id' => $user->id,
+                'wilaya' => '',
+                'commune' => '',
+                'latitude' => 0,
+                'logitude' => 0,
             ]);
             Auth::login($user);
             return redirect()->route('family.dashboard');
         } else {
             Employee::create([
                 'user_id' => $user->id
+            ]);
+            // Create a default localization record for the user
+            \App\Models\Localization::create([
+                'user_id' => $user->id,
+                'wilaya' => '',
+                'commune' => '',
+                'latitude' => 0,
+                'logitude' => 0,
             ]);
             Auth::login($user);
             return redirect()->route('employee.dashboard');
@@ -97,7 +112,7 @@ class AuthController extends Controller
         ]);
 
         // 2. Verify the Master Security Key
-        $masterKey = 'CARE-PRO-2026'; // Change this to your desired secret password
+        $masterKey = config('services.admin.master_key'); 
         
         if ($request->security_key !== $masterKey) {
             return back()->withErrors(['security_key' => 'Invalid Master Security Key. Access Denied.']);

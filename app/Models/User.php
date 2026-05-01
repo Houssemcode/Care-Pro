@@ -43,6 +43,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Admin::class);
     }
+
+    public function localization()
+    {
+        return $this->hasOne(Localization::class);
+    }
     public function getRoleBadgeAttribute()
     {
         if ($this->admin) return ['name' => 'Admin', 'class' => 'bg-slate-100 text-slate-700 ring-slate-500/20'];

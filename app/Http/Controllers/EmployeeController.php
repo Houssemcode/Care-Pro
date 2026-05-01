@@ -55,7 +55,7 @@ class EmployeeController extends Controller
         $search = $request->input('search');
         $status = $request->input('status', 'pending'); // Default to pending
 
-        $query = BookingRequest::with(['family.user', 'offre'])
+        $query = BookingRequest::with(['family.user', 'offre', 'messages.user'])
             ->whereHas('offre', function ($q) use ($employeeId) {
                 $q->where('employee_id', $employeeId);
             });
@@ -92,25 +92,50 @@ class EmployeeController extends Controller
 
         $employeeId = Auth::user()->employee->id;
 
-        $bookingRequest = \App\Models\Request::where('id', $id)
-            ->whereHas('offre', function($q) use ($employeeId) {
-                $q->where('employee_id', $employeeId);
-            })->firstOrFail();
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($request, $id, $employeeId) {
+            // Use lockForUpdate to prevent other requests from modifying this booking simultaneously
+            $bookingRequest = \App\Models\Request::where('id', $id)
+                ->whereHas('offre', function($q) use ($employeeId) {
+                    $q->where('employee_id', $employeeId);
+                })
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        $bookingRequest->update(['status' => 'assigned']);
+            if ($bookingRequest->status !== 'pending') {
+                return back()->withErrors('This request is no longer pending.');
+            }
 
-        // Updated Model Name and added assigned_at
-        \App\Models\AssignmentService::create([
-            'family_id' => $bookingRequest->family_id,
-            'offre_id' => $bookingRequest->offre_id,
-            'price' => $request->price,
-            'assigned_at' => now(), 
-            'start_date' => $bookingRequest->start_date,
-            'end_date' => $bookingRequest->end_date,
-            'status' => 'active'
-        ]);
+            // Check for overlapping active assignments for this employee
+            $hasOverlap = \App\Models\AssignmentService::whereHas('offre', function($q) use ($employeeId) {
+                    $q->where('employee_id', $employeeId);
+                })
+                ->where('status', 'active')
+                ->where(function ($query) use ($bookingRequest) {
+                    $query->where(function ($q) use ($bookingRequest) {
+                        $q->where('start_date', '<=', $bookingRequest->end_date)
+                          ->where('end_date', '>=', $bookingRequest->start_date);
+                    });
+                })
+                ->exists();
 
-        return back()->with('success', 'You have accepted the request and set the price at ' . $request->price . ' DA.');
+            if ($hasOverlap) {
+                return back()->withErrors('This employee is already booked for some or all of these dates.');
+            }
+
+            $bookingRequest->update(['status' => 'assigned']);
+
+            \App\Models\AssignmentService::create([
+                'family_id' => $bookingRequest->family_id,
+                'offre_id' => $bookingRequest->offre_id,
+                'price' => $request->price,
+                'assigned_at' => now(),
+                'start_date' => $bookingRequest->start_date,
+                'end_date' => $bookingRequest->end_date,
+                'status' => 'active'
+            ]);
+
+            return back()->with('success', 'You have accepted the request and set the price at ' . $request->price . ' DA.');
+        });
     }
 
     // Reject a Request
@@ -140,20 +165,20 @@ class EmployeeController extends Controller
     public function storeOffre(Request $request)
     {
         $request->validate([
-            'address' => 'required|string|max:255',
+            'wilaya' => 'required|string|max:255',
+            'commune' => 'required|string|max:255',
             // Strict ENUM validation:
             'service_type' => 'required|in:"Child Care","Elderly Care"',
             // Boolean validation (accepts true, false, 1, 0, "1", and "0"):
             'working_house' => 'required|boolean',
-            'address_service' => 'required|string|max:255',
         ]);
 
         \App\Models\Offre::create([
             'employee_id' => Auth::user()->employee->id,
-            'address' => $request->address,
+            'wilaya' => $request->wilaya,
+            'commune' => $request->commune,
             'service_type' => $request->service_type,
             'working_house' => $request->working_house,
-            'address_service' => $request->address_service,
         ]);
 
         return redirect()->route('employee.offers')->with('success', 'Your caregiving offer has been published!');
@@ -216,5 +241,72 @@ class EmployeeController extends Controller
         ]);
 
         return back()->with('success', 'Document uploaded successfully. Awaiting Admin review.');
+    }
+
+    public function editOffre($id)
+    {
+        $offre = Offre::where('id', $id)
+            ->where('employee_id', Auth::user()->employee->id)
+            ->firstOrFail();
+
+        // Check if it has active assignments
+        $isActive = \App\Models\Request::where('offre_id', $id)->where('status', 'assigned')->exists();
+        if ($isActive) {
+            return back()->withErrors('You cannot edit an offer that has active assignments.');
+        }
+
+        return view('employee.offres.edit', compact('offre'));
+    }
+
+    public function updateOffre(Request $request, $id)
+    {
+        $request->validate([
+            'wilaya' => 'required|string|max:255',
+            'commune' => 'required|string|max:255',
+            'service_type' => 'required|in:"Child Care","Elderly Care"',
+            'working_house' => 'required|boolean',
+        ]);
+
+        $offre = Offre::where('id', $id)
+            ->where('employee_id', Auth::user()->employee->id)
+            ->firstOrFail();
+
+        $isActive = \App\Models\Request::where('offre_id', $id)->where('status', 'assigned')->exists();
+        if ($isActive) {
+            return back()->withErrors('You cannot edit an offer that has active assignments.');
+        }
+
+        $offre->update([
+            'wilaya' => $request->wilaya,
+            'commune' => $request->commune,
+            'service_type' => $request->service_type,
+            'working_house' => $request->working_house,
+        ]);
+
+        return redirect()->route('employee.offers')->with('success', 'Offer updated successfully.');
+    }
+
+    // ==========================================
+    // VIEW FAMILY PROFILE
+    // ==========================================
+    public function familyProfile($id)
+    {
+        $family = \App\Models\Family::with(['user.localization'])->findOrFail($id);
+
+        // Get the booking history between this employee and this family
+        $employeeId = Auth::user()->employee->id;
+        $bookingHistory = \App\Models\AssignmentService::where('family_id', $family->id)
+            ->whereHas('offre', function ($q) use ($employeeId) {
+                $q->where('employee_id', $employeeId);
+            })
+            ->with('offre')
+            ->latest()
+            ->get();
+
+        // Count stats for this family's interactions with the current employee
+        $totalBookings = $bookingHistory->count();
+        $activeBookings = $bookingHistory->where('status', 'active')->count();
+
+        return view('employee.family_profile', compact('family', 'bookingHistory', 'totalBookings', 'activeBookings'));
     }
 }
