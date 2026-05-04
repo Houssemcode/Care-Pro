@@ -51,7 +51,7 @@ Care-Pro is a sophisticated, role-based ecosystem built with Laravel 11, designe
 
 1. **Clone & Install Dependencies**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Houssemcode/Care-Pro.git
    cd care-pro
    composer install
    npm install
