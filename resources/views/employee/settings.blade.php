@@ -73,12 +73,12 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Wilaya</label>
-                            <input type="text" name="wilaya" value="{{ Auth::user()->localization->wilaya ?? '' }}" placeholder="e.g., Alger"
+                            <input type="text" name="wilaya" value="{{ Auth::user()->localization?->wilaya ?? '' }}" placeholder="e.g., Alger"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Commune</label>
-                            <input type="text" name="commune" value="{{ Auth::user()->localization->commune ?? '' }}" placeholder="e.g., Bab El Oued"
+                            <input type="text" name="commune" value="{{ Auth::user()->localization?->commune ?? '' }}" placeholder="e.g., Bab El Oued"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                         </div>
                     </div>

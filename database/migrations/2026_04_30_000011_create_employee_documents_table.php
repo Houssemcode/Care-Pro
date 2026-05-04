@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             
             // e.g., 'id_card', 'nursing_certificate', 'background_check'
-            $table->string('document_type'); 
+            $table->enum('document_type', ['id_card', 'certificate', 'criminal_record', 'medical_certificate', 'resume']);
             
             // Where the file is stored on your server
             $table->string('file_path'); 

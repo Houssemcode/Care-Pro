@@ -54,13 +54,13 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Wilaya <span class="text-rose-500">*</span></label>
-                            <input type="text" name="wilaya" value="{{ Auth::user()->localization->wilaya ?? '' }}" placeholder="e.g., Alger" required
+                            <input type="text" name="wilaya" value="{{ Auth::user()->localization?->wilaya ?? '' }}" placeholder="e.g., Alger" required
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                             @error('wilaya') <p class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Commune <span class="text-rose-500">*</span></label>
-                            <input type="text" name="commune" value="{{ Auth::user()->localization->commune ?? '' }}" placeholder="e.g., Bab El Oued" required
+                            <input type="text" name="commune" value="{{ Auth::user()->localization?->commune ?? '' }}" placeholder="e.g., Bab El Oued" required
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                             @error('commune') <p class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>

@@ -46,8 +46,8 @@
                 <thead>
                     <tr>
                         <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">ID & Date</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Family (Reporter)</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Caregiver (Reported)</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reporter</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reported User</th>
                         <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reason & Details</th>
                         <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Status</th>
                         <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 text-right">Actions</th>
@@ -61,12 +61,22 @@
                             <span class="text-slate-400 text-[10px]">{{ \Carbon\Carbon::parse($report->created_at)->format('M d, Y') }}</span>
                         </td>
                         <td class="px-8 py-4">
-                            <span class="font-bold text-slate-800">{{ $report->family->user->name ?? 'Unknown Family' }}</span><br>
-                            <span class="text-slate-500 text-[10px]">ID: {{ $report->family_id }}</span>
+                            @if($report->reporter_type === 'family')
+                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? 'Unknown Family' }}</span><br>
+                                <span class="text-slate-500 text-[10px]">Family (ID: {{ $report->family_id }})</span>
+                            @else
+                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? 'Unknown Caregiver' }}</span><br>
+                                <span class="text-slate-500 text-[10px]">Caregiver (ID: {{ $report->employee_id }})</span>
+                            @endif
                         </td>
                         <td class="px-8 py-4">
-                            <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? 'Unknown Caregiver' }}</span><br>
-                            <span class="text-slate-500 text-[10px]">ID: {{ $report->employee_id }}</span>
+                            @if($report->reporter_type === 'family')
+                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? 'Unknown Caregiver' }}</span><br>
+                                <span class="text-slate-500 text-[10px]">Caregiver (ID: {{ $report->employee_id }})</span>
+                            @else
+                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? 'Unknown Family' }}</span><br>
+                                <span class="text-slate-500 text-[10px]">Family (ID: {{ $report->family_id }})</span>
+                            @endif
                         </td>
                         <td class="px-8 py-4 max-w-[250px]">
                             <span class="font-bold text-rose-600/90 text-xs">{{ $report->rapport_reason ?? $report->report_reason ?? 'Dispute' }}</span>
@@ -79,11 +89,19 @@
                         </td>
                         <td class="px-8 py-4 text-right space-x-1">
                             <div class="flex items-center justify-end gap-2">
+                                @php
+                                    $reporterName = $report->reporter_type === 'family' ? ($report->family->user->name ?? 'Unknown Family') : ($report->employee->user->name ?? 'Unknown Caregiver');
+                                    $reportedName = $report->reporter_type === 'family' ? ($report->employee->user->name ?? 'Unknown Caregiver') : ($report->family->user->name ?? 'Unknown Family');
+                                    $reporterLabel = $reporterName . ' (' . ucfirst($report->reporter_type) . ')';
+                                    $reportedType = $report->reporter_type === 'family' ? 'Caregiver' : 'Family';
+                                    $reportedLabel = $reportedName . ' (' . $reportedType . ')';
+                                    $reportedUserId = $report->reporter_type === 'family' ? ($report->employee->user->id ?? 0) : ($report->family->user->id ?? 0);
+                                @endphp
                                 <button class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-all active:scale-95" 
                                     onclick="viewReportDetails(
                                         '{{ $report->id }}',
-                                        '{{ addslashes($report->family->user->name ?? 'Unknown Family') }}',
-                                        '{{ addslashes($report->employee->user->name ?? 'Unknown Caregiver') }}',
+                                        '{{ addslashes($reporterLabel) }}',
+                                        '{{ addslashes($reportedLabel) }}',
                                         '{{ addslashes($report->rapport_reason ?? $report->report_reason ?? 'Dispute') }}',
                                         '{{ addslashes(str_replace(["\r", "\n"], ' ', $report->description ?? '')) }}'
                                     )">
@@ -94,7 +112,7 @@
                                     <button class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition-all border border-brand-100 active:scale-95" onclick="openResolveModal('{{ $report->id }}')">Resolve</button>
                                 @endif
                                 
-                                <button class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all border border-rose-100 active:scale-95" onclick="openConfirm('ban', '{{ $report->employee->user->id ?? 0 }}', '{{ addslashes($report->employee->user->name ?? 'Caregiver') }}')">Ban</button>
+                                <button class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all border border-rose-100 active:scale-95" onclick="openConfirm('ban', '{{ $reportedUserId }}', '{{ addslashes($reportedName) }}', '{{ $reportedType }}')">Ban {{ $reportedType }}</button>
                             </div>
                         </td>
                     </tr>
@@ -122,11 +140,11 @@
             <div class="modal-body space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
-                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reporter (Family)</h4>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reporter</h4>
                         <p class="text-sm font-bold text-slate-800" id="detail-family"></p>
                     </div>
                     <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
-                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reported (Caregiver)</h4>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reported User</h4>
                         <p class="text-sm font-bold text-slate-800" id="detail-caregiver"></p>
                     </div>
                 </div>
@@ -167,7 +185,7 @@
                 @csrf @method('PATCH')
                 <div class="px-6 py-8 text-center flex flex-col items-center">
                     <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-rose-100 text-rose-500"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
-                    <h3 class="font-display font-bold text-xl text-slate-800 mb-2">Suspend Employee</h3>
+                    <h3 class="font-display font-bold text-xl text-slate-800 mb-2">Suspend User</h3>
                     <p class="text-sm text-slate-500" id="confirm-message"></p>
                 </div>
                 <div class="modal-footer justify-center bg-transparent border-t-0 pt-0 gap-3">
@@ -194,9 +212,9 @@
             openModal('modal-resolve');
         }
 
-        function openConfirm(action, employeeUserId, name) {
-            document.getElementById('confirm-message').textContent = `Are you sure you want to suspend ${name}? They will lose access to the platform.`;
-            document.getElementById('form-ban-employee').action = `/admin/users/${employeeUserId}/toggle-status`;
+        function openConfirm(action, userId, name, type) {
+            document.getElementById('confirm-message').textContent = `Are you sure you want to suspend this ${type} (${name})? They will lose access to the platform.`;
+            document.getElementById('form-ban-employee').action = `/admin/users/${userId}/toggle-status`;
             openModal('modal-confirm');
         }
     </script>

@@ -102,7 +102,13 @@
             {{-- Verification Documents --}}
             <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="font-display font-bold text-lg text-slate-800">Verification Documents</h3>
+                    <div class="flex items-center gap-3">
+                        <h3 class="font-display font-bold text-lg text-slate-800">Verification Documents</h3>
+                        <a href="{{ route('employee.documents.info') }}" class="text-[10px] bg-brand-50 text-brand-600 hover:bg-brand-100 font-bold px-2 py-1 rounded-md transition-colors" title="What should I upload?">
+                            <svg class="w-3.5 h-3.5 inline-block mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Info
+                        </a>
+                    </div>
                     @if($status === 'active')
                         <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded-lg border border-emerald-100">Verified</span>
                     @else
@@ -124,8 +130,9 @@
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Document Type</label>
                             <select name="document_type" required class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition-all">
-                                <option value="id_card">National ID / Passport</option>
-                                <option value="certificate">Professional Certificate / Diploma</option>
+                                @foreach($documentTypes as $type)
+                                    <option value="{{ $type }}">{{ ucwords(str_replace('_', ' ', $type)) }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div>

@@ -89,12 +89,14 @@ Route::middleware(['auth', 'role:employee'])->prefix('employee')->name('employee
     
     // Employee Pages
     Route::get('/reports', [EmployeeController::class, 'reports'])->name('reports');
+    Route::post('/reports', [EmployeeController::class, 'storeReport'])->name('reports.store');
     
     // Settings & Profile
     Route::get('/settings',  function () { return view('employee.settings'); })->name('settings');
     Route::post('/settings/info', [SettingsController::class, 'updateInfo'])->name('settings.info');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::get('/profile', [EmployeeController::class, 'profile'])->name('profile');
+    Route::get('/documents/info', [EmployeeController::class, 'documentsInfo'])->name('documents.info');
     Route::post('/documents/upload', [EmployeeController::class, 'uploadDocument'])->name('documents.upload');
     Route::post('/requests/{id}/messages', [\App\Http\Controllers\BookingMessageController::class, 'store'])->name('requests.messages.store');
     Route::get('/family/{id}', [EmployeeController::class, 'familyProfile'])->name('family.profile');

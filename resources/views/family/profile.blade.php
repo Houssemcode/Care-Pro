@@ -71,11 +71,11 @@
                     </div>
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
                         <span class="text-sm font-medium text-slate-500">Wilaya</span>
-                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization->wilaya ?? 'Not provided' }}</span>
+                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization?->wilaya ?? 'Not provided' }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
                         <span class="text-sm font-medium text-slate-500">Commune</span>
-                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization->commune ?? 'Not provided' }}</span>
+                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization?->commune ?? 'Not provided' }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3">
                         <span class="text-sm font-medium text-slate-500">GPS Coordinates</span>

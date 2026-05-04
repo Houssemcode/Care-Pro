@@ -189,17 +189,22 @@ class FamilyController extends Controller
     // ==========================================
     // VIEW MY SUBMITTED REPORTS
     // ==========================================
-    public function reports()
+    public function reports(Request $request)
     {
         $familyId = Auth::user()->family->id;
+        $filter = $request->input('filter', 'sent');
 
-        // Fetch reports with caregiver user info so we can display their name
-        $reports = \App\Models\Report::with(['employee.user'])
-            ->where('family_id', $familyId)
-            ->latest()
-            ->paginate(10);
+        $query = \App\Models\Report::with(['employee.user'])->where('family_id', $familyId);
 
-        return view('family.reports', compact('reports'));
+        if ($filter === 'received') {
+            $query->where('reporter_type', 'employee');
+        } else {
+            $query->where('reporter_type', 'family');
+        }
+
+        $reports = $query->latest()->paginate(10)->withQueryString();
+
+        return view('family.reports', compact('reports', 'filter'));
     }
 
     // ==========================================
@@ -218,6 +223,7 @@ class FamilyController extends Controller
         Report::create([
             'family_id' => Auth::user()->family->id,
             'employee_id' => $request->employee_id,
+            'reporter_type' => 'family',
             'report_reason' => $request->report_reason, 
             'description' => $request->description,         
             'status' => 'active',

@@ -3,9 +3,19 @@
 
     <x-family.page-header 
         breadcrumb="Disputes" 
-        title="My Submitted Reports" 
-        subtitle="Track the status of disputes or issues you've reported to the admin team." 
+        title="My Reports" 
+        subtitle="Track the status of disputes or issues involving your account." 
     />
+
+    {{-- Filters --}}
+    <div class="flex gap-4 mb-6">
+        <a href="{{ route('family.reports', ['filter' => 'sent']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'sent' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+            Sent by Me
+        </a>
+        <a href="{{ route('family.reports', ['filter' => 'received']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'received' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+            Received Reports
+        </a>
+    </div>
 
     {{-- Notifications --}}
     @if (session('success'))
@@ -28,7 +38,11 @@
                         <div>
                             <h3 class="font-display font-bold text-lg text-slate-800">{{ $report->report_reason ?? 'Dispute Filed' }}</h3>
                             <p class="text-xs text-slate-500 font-medium mt-0.5">
-                                Caregiver: <span class="text-slate-800 font-bold uppercase tracking-tight">{{ $report->employee->user->name ?? 'Caregiver ID: ' . $report->employee_id }}</span> 
+                                @if($filter === 'sent')
+                                    Reported Caregiver: <span class="text-slate-800 font-bold uppercase tracking-tight">{{ $report->employee->user->name ?? 'Caregiver ID: ' . $report->employee_id }}</span> 
+                                @else
+                                    Reported by: <span class="text-slate-800 font-bold uppercase tracking-tight">{{ $report->employee->user->name ?? 'Caregiver ID: ' . $report->employee_id }}</span> 
+                                @endif
                                 <span class="mx-2 text-slate-300">•</span> 
                                 {{ \Carbon\Carbon::parse($report->created_at)->format('M d, Y') }}
                             </p>
@@ -72,8 +86,8 @@
                 <div class="w-16 h-16 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100 shadow-inner">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h3 class="font-display font-bold text-xl text-slate-800 mb-2">No Reports Submitted</h3>
-                <p class="text-slate-500 font-medium text-sm">You haven't filed any disputes against caregivers.</p>
+                <h3 class="font-display font-bold text-xl text-slate-800 mb-2">No Reports Found</h3>
+                <p class="text-slate-500 font-medium text-sm">There are no reports in this category.</p>
             </div>
         @endforelse
 

@@ -6,8 +6,18 @@
         <x-employee.page-header 
             breadcrumb="Account" 
             title="My Reports" 
-            subtitle="Track disputes or reports submitted by families regarding your services." 
+            subtitle="Track disputes or reports involving your account." 
         />
+
+        {{-- Filters --}}
+        <div class="flex gap-4 mb-6">
+            <a href="{{ route('employee.reports', ['filter' => 'sent']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'sent' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+                Sent by Me
+            </a>
+            <a href="{{ route('employee.reports', ['filter' => 'received']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'received' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+                Received Reports
+            </a>
+        </div>
 
         {{-- Reports List --}}
         <div class="space-y-6">
@@ -21,9 +31,13 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
                         <div>
-                            <h3 class="font-display font-bold text-lg text-slate-800">{{ $report->rapport_reason ?? 'Dispute Filed' }}</h3>
+                            <h3 class="font-display font-bold text-lg text-slate-800">{{ $report->report_reason ?? 'Dispute Filed' }}</h3>
                             <p class="text-xs text-slate-500 font-medium mt-0.5">
-                                Reported by: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? 'Family ID: ' . $report->family_id }}</span> 
+                                @if($filter === 'sent')
+                                    Reported Family: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? 'Family ID: ' . $report->family_id }}</span>
+                                @else
+                                    Reported by: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? 'Family ID: ' . $report->family_id }}</span> 
+                                @endif
                                 <span class="mx-1">•</span> 
                                 {{ \Carbon\Carbon::parse($report->created_at)->format('M d, Y') }}
                             </p>
@@ -68,7 +82,7 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <h3 class="font-display font-bold text-xl text-slate-800 mb-1">Clean Record!</h3>
-                <p class="text-slate-500 font-medium text-sm">There are no reports on your account. Keep up the great work.</p>
+                <p class="text-slate-500 font-medium text-sm">There are no reports in this category.</p>
             </div>
             @endforelse
 

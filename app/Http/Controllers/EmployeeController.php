@@ -194,17 +194,42 @@ class EmployeeController extends Controller
 
         return view('employee.offers', compact('offers'));
     }
-    public function reports()
+    public function reports(Request $request)
     {
         $employeeId = Auth::user()->employee->id;
+        $filter = $request->input('filter', 'sent');
         
-        // Fetch reports linked to this employee, loading the family relation
-        $reports = \App\Models\Report::with('family.user')
-            ->where('employee_id', $employeeId)
-            ->latest()
-            ->paginate(10);
+        $query = \App\Models\Report::with('family.user')->where('employee_id', $employeeId);
 
-        return view('employee.reports', compact('reports'));
+        if ($filter === 'received') {
+            $query->where('reporter_type', 'family');
+        } else {
+            $query->where('reporter_type', 'employee');
+        }
+
+        $reports = $query->latest()->paginate(10)->withQueryString();
+
+        return view('employee.reports', compact('reports', 'filter'));
+    }
+
+    public function storeReport(Request $request)
+    {
+        $request->validate([
+            'family_id' => 'required|exists:families,id',
+            'report_reason' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
+
+        \App\Models\Report::create([
+            'employee_id' => Auth::user()->employee->id,
+            'family_id' => $request->family_id,
+            'reporter_type' => 'employee',
+            'report_reason' => $request->report_reason, 
+            'description' => $request->description,         
+            'status' => 'active',
+        ]);
+
+        return back()->with('success', 'Your report has been submitted. Our administrators will review it and get back to you.');
     }
     public function profile()
     {
@@ -216,15 +241,35 @@ class EmployeeController extends Controller
             $q->where('employee_id', $employee->id);
         })->where('status', 'assigned')->count();
 
-        return view('employee.profile', compact('employee', 'activeOffers', 'assignedJobs'));
+        $documentTypes = $this->getDocumentTypes();
+
+        return view('employee.profile', compact('employee', 'activeOffers', 'assignedJobs', 'documentTypes'));
+    }
+    
+    private function getDocumentTypes()
+    {
+        $type = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM employee_documents WHERE Field = 'document_type'")[0]->Type;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $documentTypes = [];
+        foreach(explode(',', $matches[1]) as $value){
+            $documentTypes[] = trim($value, "'");
+        }
+        return $documentTypes;
+    }
+
+    public function documentsInfo()
+    {
+        $documentTypes = $this->getDocumentTypes();
+        return view('employee.documents_info', compact('documentTypes'));
     }
     // ==========================================
     // UPLOAD VERIFICATION DOCUMENTS
     // ==========================================
     public function uploadDocument(Request $request)
     {
+        $validTypes = implode(',', $this->getDocumentTypes());
         $request->validate([
-            'document_type' => 'required|string|in:id_card,certificate',
+            'document_type' => 'required|string|in:' . $validTypes,
             'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // Max 5MB
         ]);
 

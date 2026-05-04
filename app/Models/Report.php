@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-    protected $fillable = ['admin_id', 'employee_id', 'family_id', 'report_reason', 'description', 'status'];
+    protected $fillable = ['admin_id', 'employee_id', 'family_id', 'reporter_type', 'report_reason', 'description', 'status'];
 
     public function employee() {
         return $this->belongsTo(Employee::class);

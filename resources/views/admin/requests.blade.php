@@ -56,7 +56,7 @@
                             <td class="px-8 py-4">
                                 <div class="font-semibold text-slate-900">{{ $req->family->user->name ?? 'Unknown Family' }}</div>
                                 <div class="flex items-center gap-1.5 mt-0.5">
-                                    <div class="text-[10px] text-slate-500 font-medium truncate max-w-[150px]">{{ $req->family->user->localization->commune ?? '' }}{{ $req->family->user->localization->wilaya ? ', ' . $req->family->user->localization->wilaya : 'No Location' }}</div>
+                                    <div class="text-[10px] text-slate-500 font-medium truncate max-w-[150px]">{{ $req->family->user->localization?->commune ?? '' }}{{ $req->family->user->localization?->wilaya ? ', ' . $req->family->user->localization->wilaya : 'No Location' }}</div>
                                     @if($req->family->user->localization && $req->family->user->localization->latitude && $req->family->user->localization->logitude)
                                         <a href="https://www.google.com/maps?q={{ $req->family->user->localization->latitude }},{{ $req->family->user->localization->logitude }}" target="_blank" rel="noopener"
                                             class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-brand-50 text-brand-700 rounded text-[10px] font-bold hover:bg-brand-100 transition-colors ring-1 ring-inset ring-brand-500/20" title="View on map">

@@ -39,6 +39,7 @@ CREATE TABLE employees (
 CREATE TABLE families (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
+    status ENUM('active', 'suspended') NOT NULL DEFAULT 'active',
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -117,6 +118,7 @@ CREATE TABLE reports (
     admin_id BIGINT DEFAULT NULL,
     employee_id BIGINT NOT NULL,
     family_id BIGINT NOT NULL,
+    reporter_type ENUM('family', 'employee') NOT NULL,
     report_reason VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     status ENUM('active', 'resolved') NOT NULL DEFAULT 'active',
@@ -131,7 +133,7 @@ CREATE TABLE reports (
 CREATE TABLE employee_documents (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     employee_id BIGINT NOT NULL,
-    document_type VARCHAR(255) NOT NULL,
+    document_type ENUM('id_card', 'certificate', 'criminal_record', 'medical_certificate', 'resume') NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,

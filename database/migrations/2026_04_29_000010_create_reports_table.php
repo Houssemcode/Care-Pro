@@ -16,6 +16,7 @@ return new class extends Migration
         $table->foreignId('admin_id')->nullable()->constrained('admins')->onDelete('cascade');
         $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
         $table->foreignId('family_id')->constrained('families')->onDelete('cascade');        
+        $table->enum('reporter_type', ['family', 'employee']);
         $table->string('report_reason');
         $table->text('description');
         $table->enum('status', ['active', 'resolved'])->default('active');

@@ -40,16 +40,11 @@ class AdminController extends Controller
         // Apply Status Filter
         $query->when($status, function ($q) use ($status) {
             $q->where(function ($sub) use ($status) {
-                // Filter Employees by their actual DB status
                 $sub->whereHas('employee', function ($e) use ($status) {
                     $e->where('status', $status);
+                })->orWhereHas('family', function ($f) use ($status) {
+                    $f->where('status', $status);
                 });
-
-                // Families are only shown if the filter is "active" 
-                // (Since they don't have a status column, they are implicitly always active)
-                if ($status === 'active') {
-                    $sub->orHas('family');
-                }
             });
         });
 
@@ -80,7 +75,11 @@ class AdminController extends Controller
         if ($user->employee) {
             $newStatus = $user->employee->status === 'suspended' ? 'active' : 'suspended';
             $user->employee->update(['status' => $newStatus]);
-            return back()->with('success', "User has been {$newStatus}.");
+            return back()->with('success', "Caregiver has been {$newStatus}.");
+        } elseif ($user->family) {
+            $newStatus = $user->family->status === 'suspended' ? 'active' : 'suspended';
+            $user->family->update(['status' => $newStatus]);
+            return back()->with('success', "Family has been {$newStatus}.");
         }
         
         return back()->with('success', 'Action completed.');

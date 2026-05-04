@@ -72,6 +72,14 @@
                                 ];
                                 $badgeClass = $statusMap[$displayStatus]['class'] ?? $badgeClass;
                                 $icon = $statusMap[$displayStatus]['icon'] ?? $icon;
+                            } elseif ($user->family) {
+                                $displayStatus = $user->family->status ?? 'active';
+                                $statusMap = [
+                                    'active'    => ['class' => 'bg-emerald-50 text-emerald-700 ring-emerald-500/20',    'icon' => '🟢'],
+                                    'suspended' => ['class' => 'bg-rose-50 text-rose-700 ring-rose-500/20', 'icon' => '🔴'],
+                                ];
+                                $badgeClass = $statusMap[$displayStatus]['class'] ?? $badgeClass;
+                                $icon = $statusMap[$displayStatus]['icon'] ?? $icon;
                             }
                         @endphp
                         <tr class="hover:bg-slate-50/50 transition-colors group">
@@ -103,9 +111,9 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </button>
 
-                                    @if ($user->employee)
+                                    @if ($user->employee || $user->family)
                                         @php
-                                            $isSuspended = $user->employee->status === 'suspended';
+                                            $isSuspended = $user->employee ? $user->employee->status === 'suspended' : $user->family->status === 'suspended';
                                             $actionType = $isSuspended ? 'restore' : 'suspend';
                                             $btnColor = $isSuspended ? 'emerald' : 'rose';
                                         @endphp

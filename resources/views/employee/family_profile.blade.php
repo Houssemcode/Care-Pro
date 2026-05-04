@@ -33,6 +33,13 @@
         </div>
     </div>
 
+    @if (session('success'))
+        <div class="mb-8 p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-medium flex items-center gap-3">
+            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {{-- Left Column: Info & History --}}
         <div class="lg:col-span-2 space-y-8">
@@ -162,11 +169,11 @@
                 <div class="space-y-4">
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Wilaya</p>
-                        <p class="text-sm font-bold text-slate-800">{{ $family->user->localization->wilaya ?? 'Not set' }}</p>
+                        <p class="text-sm font-bold text-slate-800">{{ $family->user->localization?->wilaya ?? 'Not set' }}</p>
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Commune</p>
-                        <p class="text-sm font-bold text-slate-800">{{ $family->user->localization->commune ?? 'Not set' }}</p>
+                        <p class="text-sm font-bold text-slate-800">{{ $family->user->localization?->commune ?? 'Not set' }}</p>
                     </div>
 
                     @if($family->user->localization && $family->user->localization->latitude && $family->user->localization->logitude)
@@ -184,10 +191,86 @@
                 </div>
             </div>
 
-            <a href="{{ route('employee.requests') }}" class="flex items-center justify-center gap-3 w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all shadow-lg shadow-slate-900/10 active:scale-95 group">
-                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                Back to Requests
-            </a>
+            <div class="flex flex-col gap-3">
+                <a href="{{ route('employee.requests') }}" class="flex items-center justify-center gap-3 w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all shadow-lg shadow-slate-900/10 active:scale-95 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Back to Requests
+                </a>
+                <button onclick="openReportModal('{{ $family->id }}', '{{ addslashes($family->user->name) }}')" class="flex items-center justify-center gap-3 w-full py-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-2xl transition-all active:scale-95 border border-rose-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Report Family Issue
+                </button>
+            </div>
         </div>
     </div>
+
+    {{-- Report Modal --}}
+    <div id="modal-report" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4" onclick="if(event.target===this) closeReportModal()">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-300 flex flex-col overflow-hidden" id="modal-report-content">
+            <form id="report-form" method="POST" action="{{ route('employee.reports.store') }}">
+                @csrf
+                <input type="hidden" name="family_id" id="report_family_id" value="">
+                
+                <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <h3 class="font-display font-bold text-lg text-slate-800">Report Family</h3>
+                    <button type="button" onclick="closeReportModal()" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                
+                <div class="p-8 space-y-6">
+                    @if ($errors->any())
+                        <div class="bg-rose-50 border border-rose-100 text-rose-700 px-4 py-3 rounded-xl text-sm font-medium">
+                            <ul class="list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-rose-800">
+                        <p class="text-sm font-medium">Reporting <strong id="report_family_name" class="font-bold text-rose-900">...</strong>. Our team will review this case shortly.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Reason for Report <span class="text-rose-500">*</span></label>
+                        <select name="report_reason" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
+                            <option value="" disabled selected>Select a reason...</option>
+                            <option value="Unsafe Environment">Unsafe Environment</option>
+                            <option value="Unprofessional Behavior">Unprofessional Behavior</option>
+                            <option value="Payment Issue">Payment Issue</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Additional Details <span class="text-rose-500">*</span></label>
+                        <textarea name="description" required rows="4" placeholder="Please provide specific details about the incident..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium resize-none transition-all"></textarea>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-500/30 active:scale-95">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        const reportModal = document.getElementById('modal-report');
+        const reportModalContent = document.getElementById('modal-report-content');
+
+        function openReportModal(familyId, familyName) {
+            document.getElementById('report_family_id').value = familyId;
+            document.getElementById('report_family_name').textContent = familyName;
+            reportModal.classList.remove('invisible', 'opacity-0');
+            setTimeout(() => reportModalContent.classList.remove('scale-95', 'opacity-0'), 50);
+        }
+
+        function closeReportModal() {
+            reportModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => reportModal.classList.add('invisible', 'opacity-0'), 200);
+        }
+    </script>
+    @endpush
 </x-layouts.employee>

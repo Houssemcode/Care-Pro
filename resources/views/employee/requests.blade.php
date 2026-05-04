@@ -71,7 +71,7 @@
                                         </div>
                                     </a>
                                     <div class="flex items-center gap-1.5 mt-0.5">
-                                        <div class="text-[11px] text-slate-500 truncate max-w-[180px]">{{ $req->family->user->localization->commune ?? '' }}{{ $req->family->user->localization->wilaya ? ', ' . $req->family->user->localization->wilaya : '' }}</div>
+                                        <div class="text-[11px] text-slate-500 truncate max-w-[180px]">{{ $req->family->user->localization?->commune ?? '' }}{{ $req->family->user->localization?->wilaya ? ', ' . $req->family->user->localization->wilaya : '' }}</div>
                                         @if($req->family->user->localization && $req->family->user->localization->latitude && $req->family->user->localization->logitude)
                                             <a href="https://www.google.com/maps/dir/?api=1&destination={{ $req->family->user->localization->latitude }},{{ $req->family->user->localization->logitude }}" target="_blank" rel="noopener"
                                                 class="inline-flex items-center gap-1 px-2 py-0.5 bg-brand-50 text-brand-700 rounded-md text-[10px] font-bold hover:bg-brand-100 transition-colors ring-1 ring-inset ring-brand-500/20 whitespace-nowrap" title="Get directions">
