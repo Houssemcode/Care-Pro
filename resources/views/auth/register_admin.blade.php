@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Registration | Care Services</title>
+    <title>{{ __('Admin Registration') }} | Care Services</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +25,15 @@
 
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex items-center justify-center p-4 py-10">
 
+    {{-- Language Switcher --}}
+    <div class="fixed top-4 end-4 z-50">
+        <a href="{{ route('lang.switch', app()->getLocale() === 'en' ? 'ar' : 'en') }}"
+           class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-slate-200 hover:border-brand-300 hover:bg-brand-50 text-slate-600 hover:text-brand-600 transition-all text-xs font-bold shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+            {{ app()->getLocale() === 'en' ? 'عربي' : 'English' }}
+        </a>
+    </div>
+
     <!-- Subtle background pattern -->
     <div class="fixed inset-0 opacity-[0.015]"
         style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23000&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
@@ -41,14 +50,14 @@
                             </path>
                         </svg>
                     </div>
-                    <h1 class="text-3xl font-display font-extrabold text-slate-900 mb-1">Create Admin</h1>
-                    <p class="text-sm font-medium text-slate-500">Register a new system administrator.</p>
+                    <h1 class="text-3xl font-display font-extrabold text-slate-900 mb-1">{{ __('Create Admin') }}</h1>
+                    <p class="text-sm font-medium text-slate-500">{{ __('Register a new system administrator.') }}</p>
                 </div>
 
                 <!-- Error Display Block -->
                 @if ($errors->any())
                     <div class="mb-5 p-4 bg-red-50 text-red-600 rounded-xl border border-red-200 text-sm font-semibold">
-                        <ul class="list-disc pl-5">
+                        <ul class="list-disc ps-5">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -61,32 +70,32 @@
                     @csrf
 
                     <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-slate-700">Full Name</label>
-                        <input type="text" name="name" placeholder="Admin Name" required
+                        <label class="block text-sm font-semibold text-slate-700">{{ __('Full Name') }}</label>
+                        <input type="text" name="name" placeholder="{{ __('Admin Name') }}" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-slate-700">Email Address</label>
+                        <label class="block text-sm font-semibold text-slate-700">{{ __('Email Address') }}</label>
                         <input type="email" name="email" placeholder="admin@careservices.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-slate-700">Password</label>
+                        <label class="block text-sm font-semibold text-slate-700">{{ __('Password') }}</label>
                         <input type="password" name="password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-slate-700">Security Key (Master Override)</label>
-                        <input type="password" name="security_key" placeholder="Enter security key to allow creation" required
+                        <label class="block text-sm font-semibold text-slate-700">{{ __('Security Key (Master Override)') }}</label>
+                        <input type="password" name="security_key" placeholder="{{ __('Enter security key to allow creation') }}" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <button type="submit"
                         class="w-full mt-6 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-base shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all">
-                        Create Account
+                        {{ __('Create Account') }}
                     </button>
                 </form>
 
@@ -97,13 +106,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        Back to login
+                        {{ __('Back to login') }}
                     </a>
                 </div>
             </div>
         </div>
 
-        <p class="text-center text-xs text-slate-400 mt-6 font-medium">Care Services Platform &copy; 2025</p>
+        <p class="text-center text-xs text-slate-400 mt-6 font-medium">{{ __('Care Services Platform') }} &copy; {{ date('Y') }}</p>
     </div>
 
 </body>

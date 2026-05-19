@@ -2,9 +2,9 @@
     @section('title', 'My Profile')
 
     <x-family.page-header 
-        breadcrumb="Account" 
-        title="Family Profile" 
-        subtitle="An overview of your client account and booking activity." 
+        breadcrumb="{{ __('Account') }}" 
+        title="{{ __('Family Profile') }}" 
+        subtitle="{{ __('An overview of your client account and booking activity.') }}" 
     />
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -23,11 +23,11 @@
                 <p class="text-sm text-slate-500 font-medium mb-4">{{ Auth::user()->email }}</p>
                 
                 <span class="inline-flex px-3 py-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 rounded-lg ring-1 ring-inset ring-indigo-500/20 uppercase tracking-widest mb-6">
-                    Family Client
+                    {{ __('Family Client') }}
                 </span>
 
                 <a href="{{ route('family.settings') }}" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">
-                    Edit Settings
+                    {{ __('Edit Settings') }}
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Total Requests</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{{ __('Total Requests') }}</p>
                         <h3 class="text-2xl font-display font-bold text-slate-900">{{ $totalRequests }}</h3>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Active Contracts</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">{{ __('Active Contracts') }}</p>
                         <h3 class="text-2xl font-display font-bold text-slate-900">{{ $activeContracts }}</h3>
                     </div>
                 </div>
@@ -59,34 +59,34 @@
 
             {{-- Account Details --}}
             <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                <h3 class="font-display font-bold text-lg text-slate-800 mb-6">Account Details</h3>
+                <h3 class="font-display font-bold text-lg text-slate-800 mb-6">{{ __('Account Details') }}</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
-                        <span class="text-sm font-medium text-slate-500">Member Since</span>
+                        <span class="text-sm font-medium text-slate-500">{{ __('Member Since') }}</span>
                         <span class="text-sm font-bold text-slate-800">{{ Auth::user()->created_at->format('F d, Y') }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
-                        <span class="text-sm font-medium text-slate-500">Phone</span>
-                        <span class="text-sm font-bold text-slate-800">{{ Auth::user()->phone ?? 'Not provided' }}</span>
+                        <span class="text-sm font-medium text-slate-500">{{ __('Phone') }}</span>
+                        <span class="text-sm font-bold text-slate-800">{{ Auth::user()->phone ?? __('Not provided') }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
-                        <span class="text-sm font-medium text-slate-500">Wilaya</span>
-                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization?->wilaya ?? 'Not provided' }}</span>
+                        <span class="text-sm font-medium text-slate-500">{{ __('Wilaya') }}</span>
+                        <span class="text-sm font-bold text-slate-800 rtl:text-left ltr:text-right">{{ Auth::user()->localization?->wilaya ?? __('Not provided') }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3 border-b border-slate-50">
-                        <span class="text-sm font-medium text-slate-500">Commune</span>
-                        <span class="text-sm font-bold text-slate-800 text-right">{{ Auth::user()->localization?->commune ?? 'Not provided' }}</span>
+                        <span class="text-sm font-medium text-slate-500">{{ __('Commune') }}</span>
+                        <span class="text-sm font-bold text-slate-800 rtl:text-left ltr:text-right">{{ Auth::user()->localization?->commune ?? __('Not provided') }}</span>
                     </div>
                     <div class="flex justify-between items-center py-3">
-                        <span class="text-sm font-medium text-slate-500">GPS Coordinates</span>
+                        <span class="text-sm font-medium text-slate-500">{{ __('GPS Coordinates') }}</span>
                         @if(Auth::user()->localization && Auth::user()->localization->latitude && Auth::user()->localization->logitude)
                             <a href="https://www.google.com/maps?q={{ Auth::user()->localization->latitude }},{{ Auth::user()->localization->logitude }}" target="_blank" rel="noopener"
                                 class="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1.5 transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                View on Map
+                                {{ __('View on Map') }}
                             </a>
                         @else
-                            <span class="text-sm font-bold text-amber-600">Not set — update in Settings</span>
+                            <span class="text-sm font-bold text-amber-600">{{ __('Not set — update in Settings') }}</span>
                         @endif
                     </div>
                 </div>

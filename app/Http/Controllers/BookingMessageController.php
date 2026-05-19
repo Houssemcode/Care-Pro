@@ -26,11 +26,18 @@ class BookingMessageController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        BookingMessage::create([
+        $message = BookingMessage::create([
             'request_id' => $requestId,
             'user_id' => $userId,
             'message' => $request->message,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+        }
 
         return back()->with('success', 'Message sent successfully.');
     }

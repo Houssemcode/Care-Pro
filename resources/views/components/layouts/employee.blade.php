@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <x-employee.head />
-    <title>@yield('title', 'Caregiver Dashboard') | Care-Pro</title>
+    <title>@yield('title', __('Caregiver Dashboard')) | Care-Pro</title>
     @stack('styles')
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col w-full overflow-x-hidden">

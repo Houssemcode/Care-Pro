@@ -15,7 +15,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
                 </div>
-                <span class="font-display font-bold tracking-tight text-xl text-white sidebar-header-text">Admin Hub</span>
+                <span class="font-display font-bold tracking-tight text-xl text-white sidebar-header-text">{{ __('Admin Hub') }}</span>
             </a>
             <button class="lg:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/10 transition" onclick="toggleSidebar()">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -23,31 +23,53 @@
         </div>
 
         <nav class="flex-1 py-5 overflow-y-auto custom-scrollbar">
-            <div class="px-6 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest sidebar-header-text">Main</div>
+            <div class="px-6 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest sidebar-header-text">{{ __('Main') }}</div>
             <a href="{{ route('admin.dashboard') }}" class="nav-item {{ $active == 'dashboard' ? 'active' : '' }}">
                 <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                <span>Dashboard</span>
+                <span>{{ __('Dashboard') }}</span>
             </a>
             <a href="{{ route('admin.users') }}" class="nav-item {{ $active == 'users' ? 'active' : '' }}">
                 <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span>Users Directory</span>
+                <span>{{ __('Users Directory') }}</span>
             </a>
             <a href="{{ route('admin.requests') }}" class="nav-item {{ $active == 'requests' ? 'active' : '' }}">
                 <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                <span>Manage Requests</span>
+                <span>{{ __('Manage Requests') }}</span>
             </a>
-            <div class="px-6 mt-6 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest sidebar-header-text">Reports</div>
+            <div class="px-6 mt-6 mb-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest sidebar-header-text">{{ __('Reports') }}</div>
             <a href="{{ route('admin.reports') }}" class="nav-item {{ $active == 'reports' ? 'active' : '' }}">
                 <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Disputes</span>
+                <span>{{ __('Disputes') }}</span>
             </a>
         </nav>
 
         <div class="p-4 border-t border-white/5">
+            {{-- Language Switcher (Full - visible when sidebar expanded) --}}
+            <div class="sidebar-lang-full mb-4">
+                <div class="flex items-center justify-center gap-1 bg-white/5 p-1 rounded-xl">
+                    @if(app()->getLocale() === 'en')
+                        <span class="text-xs font-bold text-white px-3 py-1.5 bg-brand-500 rounded-lg shadow-md w-1/2 text-center">EN</span>
+                        <a href="{{ route('lang.switch', 'ar') }}" class="text-xs font-bold text-slate-400 hover:text-white px-3 py-1.5 w-1/2 text-center transition-colors">عربي</a>
+                    @else
+                        <a href="{{ route('lang.switch', 'en') }}" class="text-xs font-bold text-slate-400 hover:text-white px-3 py-1.5 w-1/2 text-center transition-colors">EN</a>
+                        <span class="text-xs font-bold text-white px-3 py-1.5 bg-brand-500 rounded-lg shadow-md w-1/2 text-center">عربي</span>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Language Switcher (Compact - visible when sidebar collapsed) --}}
+            <div class="sidebar-lang-compact mb-4 hidden">
+                <a href="{{ route('lang.switch', app()->getLocale() === 'en' ? 'ar' : 'en') }}"
+                   class="flex items-center justify-center w-full py-2 rounded-xl bg-white/5 hover:bg-brand-500/20 text-slate-400 hover:text-brand-400 transition-all"
+                   title="{{ app()->getLocale() === 'en' ? 'عربي' : 'English' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </a>
+            </div>
+
             {{-- Collapse Toggle Button --}}
             <button onclick="toggleCollapse()" class="hidden lg:flex items-center justify-center w-full py-2 mb-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all text-xs font-bold uppercase tracking-widest">
-                <span class="sidebar-footer-text">Collapse Menu</span>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+                <span class="sidebar-footer-text">{{ __('Collapse Menu') }}</span>
+                <svg class="w-4 h-4 ms-2 sidebar-collapse-icon transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
             </button>
 
             {{-- Account Dropdown --}}
@@ -58,7 +80,7 @@
                     <div class="flex-1 min-w-0 sidebar-footer-text">
                         <p class="text-sm font-bold text-white truncate">{{ Auth::user()->name }}</p>
                         <p class="text-[11px] text-slate-500 truncate flex items-center justify-between">
-                            <span>Admin Account</span>
+                            <span>{{ __('Admin Account') }}</span>
                             <svg class="w-3 h-3 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                         </p>
                     </div>
@@ -71,17 +93,17 @@
                      x-transition:leave="transition ease-in duration-75"
                      x-transition:leave-start="transform opacity-100 scale-100"
                      x-transition:leave-end="transform opacity-0 scale-95"
-                     class="absolute bottom-full left-0 mb-2 w-full bg-slate-800 rounded-xl shadow-2xl border border-white/10 py-2 z-50 overflow-hidden"
+                     class="absolute bottom-full start-0 mb-2 w-full bg-slate-800 rounded-xl shadow-2xl border border-white/10 py-2 z-50 overflow-hidden"
                      style="display: none;">
 
                     <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        My Profile
+                        {{ __('My Profile') }}
                     </a>
 
                     <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                         <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Settings
+                        {{ __('Settings') }}
                     </a>
 
                     <hr class="my-2 border-white/5">
@@ -90,7 +112,7 @@
                         @csrf
                         <button type="submit" class="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-bold text-rose-400 hover:bg-rose-500/10 transition-colors text-left">
                             <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                            Logout
+                            {{ __('Logout') }}
                         </button>
                     </form>
                 </div>
@@ -118,7 +140,7 @@
         sidebar.classList.toggle('sidebar-collapsed');
         const collapsed = sidebar.classList.contains('sidebar-collapsed');
         if (main) {
-            main.style.marginLeft = collapsed ? '80px' : '270px';
+            main.style.marginInlineStart = collapsed ? '80px' : '270px';
         }
         localStorage.setItem('sidebar-collapsed', collapsed ? '1' : '0');
     }
@@ -129,7 +151,7 @@
             const sidebar = document.getElementById('sidebar');
             const main = document.querySelector('main');
             if (sidebar) sidebar.classList.add('sidebar-collapsed');
-            if (main) main.style.marginLeft = '80px';
+            if (main) main.style.marginInlineStart = '80px';
         }
     })();
 </script>

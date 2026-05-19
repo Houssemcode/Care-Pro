@@ -31,6 +31,7 @@ CREATE TABLE employees (
     diploma VARCHAR(255) DEFAULT NULL,
     description TEXT DEFAULT NULL,
     status ENUM('pending', 'active', 'suspended') NOT NULL DEFAULT 'pending',
+    total_points INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -135,6 +136,7 @@ CREATE TABLE employee_documents (
     employee_id BIGINT NOT NULL,
     document_type ENUM('id_card', 'certificate', 'criminal_record', 'medical_certificate', 'resume') NOT NULL,
     file_path VARCHAR(255) NOT NULL,
+    points INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE

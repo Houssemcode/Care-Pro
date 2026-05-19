@@ -1,17 +1,17 @@
 <x-layouts.employee active="offers">
-    @section('title', 'My Active Offers')
+    @section('title', __('My Active Offers'))
 
     {{-- Account Status Alert --}}
     @if(Auth::user()->employee->status === 'active')
         <x-employee.page-header 
-            breadcrumb="Care Services" 
-            title="My Active Offers" 
-            subtitle="Manage and track the caregiving services you are currently advertising."
+            breadcrumb="{{ __('Care Services') }}" 
+            title="{{ __('My Active Offers') }}" 
+            subtitle="{{ __('Manage and track the caregiving services you are currently advertising.') }}"
         >
             <x-slot:actions>
                 <a href="{{ route('employee.offres.create') }}" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-brand-500/30 active:scale-95 w-fit">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Create New Offer
+                    {{ __('Create New Offer') }}
                 </a>
             </x-slot:actions>
         </x-employee.page-header>
@@ -28,7 +28,7 @@
                         <!-- Header & Badge -->
                         <div class="flex justify-between items-start mb-4">
                             <span class="inline-flex px-3 py-1 text-[10px] font-bold text-brand-700 bg-brand-50 rounded-lg ring-1 ring-inset ring-brand-500/20">
-                                {{ $offer->service_type ?? 'Care Service' }}
+                                {{ $offer->service_type ?? __('Care Service') }}
                             </span>
                             <span class="text-xs font-bold text-slate-400">#OFF-{{ $offer->id }}</span>
                         </div>
@@ -41,8 +41,8 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Arrangement</p>
-                                    <p class="text-sm font-bold text-slate-700">{{ $offer->working_house ? 'Live-in' : 'Live-out' }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ __('Arrangement') }}</p>
+                                    <p class="text-sm font-bold text-slate-700">{{ $offer->working_house ? __('Live-in') : __('Live-out') }}</p>
                                 </div>
                             </div>
 
@@ -52,8 +52,8 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Commune</p>
-                                    <p class="text-sm font-medium text-slate-600 leading-snug">{{ $offer->commune ?? 'N/A' }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ __('Commune') }}</p>
+                                    <p class="text-sm font-medium text-slate-600 leading-snug">{{ $offer->commune ?? __('N/A') }}</p>
                                 </div>
                             </div>
 
@@ -63,15 +63,15 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Wilaya</p>
-                                    <p class="text-sm font-medium text-slate-600 leading-snug">{{ $offer->wilaya ?? 'N/A' }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ __('Wilaya') }}</p>
+                                    <p class="text-sm font-medium text-slate-600 leading-snug">{{ $offer->wilaya ?? __('N/A') }}</p>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Created Date Footer -->
                         <div class="mt-6 pt-4 border-t border-slate-50 text-[11px] font-medium text-slate-400 flex items-center justify-between">
-                            <span>Posted on {{ \Carbon\Carbon::parse($offer->created_at)->format('M d, Y') }}</span>
+                            <span>{{ __('Posted on') }} {{ \Carbon\Carbon::parse($offer->created_at)->format('M d, Y') }}</span>
                             
                             @php
                                 $isOfferActive = \App\Models\Request::where('offre_id', $offer->id)->where('status', 'assigned')->exists();
@@ -80,10 +80,10 @@
                             @if(!$isOfferActive)
                                 <a href="{{ route('employee.offres.edit', $offer->id) }}" class="text-brand-600 hover:text-brand-700 font-bold transition-colors flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    Edit
+                                    {{ __('Edit') }}
                                 </a>
                             @else
-                                <span class="text-slate-300 italic">Active (Locked)</span>
+                                <span class="text-slate-300 italic">{{ __('Active (Locked)') }}</span>
                             @endif
                         </div>
                     </div>
@@ -97,10 +97,10 @@
                             </path>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1">No Active Offers</h3>
-                    <p class="text-slate-500 font-medium text-sm mb-6">You haven't posted any caregiving services yet.</p>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1">{{ __('No Active Offers') }}</h3>
+                    <p class="text-slate-500 font-medium text-sm mb-6">{{ __('You haven\'t posted any caregiving services yet.') }}</p>
                     <a href="{{ route('employee.offres.create') }}" class="inline-flex px-5 py-2.5 bg-brand-50 text-brand-700 font-bold rounded-xl text-sm transition-all hover:bg-brand-100">
-                        Create Your First Offer
+                        {{ __('Create Your First Offer') }}
                     </a>
                 </div>
             @endforelse
@@ -108,8 +108,8 @@
 
         {{-- FAB (Mobile only since we added a desktop button at the top) --}}
         <button onclick="window.location.href='{{ route('employee.offres.create') }}'"
-            class="lg:hidden fixed md:bottom-10 md:right-10 bottom-[90px] right-4 sm:right-6 w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-xl shadow-slate-900/30 hover:scale-110 active:scale-95 transition-transform z-50 group"
-            title="Create New Offer">
+            class="lg:hidden fixed md:bottom-10 md:right-10 md:rtl:left-10 md:rtl:right-auto bottom-[90px] right-4 sm:right-6 rtl:left-4 sm:rtl:left-6 rtl:right-auto w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-xl shadow-slate-900/30 hover:scale-110 active:scale-95 transition-transform z-50 group"
+            title="{{ __('Create New Offer') }}">
             <svg class="w-6 h-6 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
@@ -124,8 +124,8 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
             <div>
-                <h3 class="text-lg font-bold text-amber-800 font-display">Account Pending Approval</h3>
-                <p class="text-sm text-amber-700 mt-1 leading-relaxed">Your account is currently under review by our administration team. You will not appear in search results or receive booking requests until your account is activated.</p>
+                <h3 class="text-lg font-bold text-amber-800 font-display">{{ __('Account Pending Approval') }}</h3>
+                <p class="text-sm text-amber-700 mt-1 leading-relaxed">{{ __('Your account is currently under review by our administration team. You will not appear in search results or receive booking requests until your account is activated.') }}</p>
             </div>
         </div>
     @endif

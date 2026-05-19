@@ -8,12 +8,24 @@ use App\Models\Offre;
 use App\Models\Request as BookingRequest;
 use App\Models\Rating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // 1. Dynamic Stats for the Hero section
+        // If user is already logged in, redirect to their dashboard
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->isEmployee()) {
+                return redirect()->route('employee.dashboard');
+            } else {
+                return redirect()->route('family.dashboard');
+            }
+        }
+
         $stats = [
             'verified_caregivers' => Employee::where('status', 'active')->count(),
             'families_joined' => \App\Models\Family::count(),

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\EmployeeDocument;
 use App\Models\Report;
 use App\Models\Request as BookingRequest;
 use App\Models\AssignmentService;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -51,9 +53,10 @@ class AdminController extends Controller
         $users = $query->latest()->paginate(10)->withQueryString();
         
         // Load pending employees WITH their uploaded documents
+        // Only show employees who have actually uploaded at least one document
         $pendingEmployees = \App\Models\User::whereHas('employee', function($q) {
             $q->where('status', 'pending');
-        })->with('employee.documents')->get();
+        })->whereHas('employee.documents')->with('employee.documents')->get();
         
         return view('admin.users', compact('users', 'pendingEmployees'));
     }
@@ -63,17 +66,100 @@ class AdminController extends Controller
     // ==========================================
     public function approveEmployee(User $user)
     {
-        if ($user->employee && $user->employee->status === 'pending') {
-            $user->employee->update(['status' => 'active']);
-            return back()->with('success', 'Employee approved successfully.');
+        if (!$user->employee || $user->employee->status !== 'pending') {
+            return back()->withErrors('Invalid request or user is not a pending employee.');
         }
-        return back()->withErrors('Invalid request or user is not a pending employee.');
+
+        $employee = $user->employee;
+
+        // Check mandatory documents exist
+        $hasIdCard = $employee->documents()->where('document_type', 'id_card')->exists();
+        $hasCriminalRecord = $employee->documents()->where('document_type', 'criminal_record')->exists();
+
+        if (!$hasIdCard || !$hasCriminalRecord) {
+            return back()->withErrors('Cannot approve: mandatory documents (ID Card and Criminal Record) are missing.');
+        }
+
+        // Check minimum points threshold
+        if ($employee->total_points < 12) {
+            return back()->withErrors('Cannot approve: employee has ' . $employee->total_points . '/15 points. Minimum 12 points required.');
+        }
+
+        $employee->update(['status' => 'active']);
+        return back()->with('success', 'Employee approved and activated successfully.');
+    }
+
+    /**
+     * Update points for all documents of an employee and recalculate total.
+     */
+    public function updateAllDocumentPoints(Request $request, Employee $employee)
+    {
+        $maxPoints = [
+            'certificate' => 5,
+            'resume' => 5,
+            'medical_certificate' => 2,
+            'criminal_record' => 2,
+            'id_card' => 1,
+        ];
+
+        // Retrieve points array, e.g. points[doc_id] = value
+        $pointsData = $request->input('points', []);
+
+        foreach ($employee->documents as $doc) {
+            $val = $pointsData[$doc->id] ?? null;
+
+            // Treat empty/null as 0 so it's not strictly required
+            $val = ($val === '' || $val === null) ? 0 : (int)$val;
+
+            $max = $maxPoints[$doc->document_type] ?? 0;
+            if ($val > $max) $val = $max;
+            if ($val < 0) $val = 0;
+
+            $doc->update(['points' => $val]);
+        }
+
+        // Recalculate total points for the employee
+        $totalPoints = $employee->documents()->sum('points');
+        $employee->update(['total_points' => $totalPoints]);
+
+        return back()->with('success', 'All document points updated. Total: ' . $totalPoints . '/15');
+    }
+
+    /**
+     * Reject an employee: delete all uploaded documents and reset status.
+     */
+    public function rejectEmployee(User $user)
+    {
+        if (!$user->employee) {
+            return back()->withErrors('Invalid request.');
+        }
+
+        $employee = $user->employee;
+
+        // Delete all document files from storage
+        foreach ($employee->documents as $doc) {
+            Storage::disk('public')->delete($doc->file_path);
+        }
+
+        // Delete all document records
+        $employee->documents()->delete();
+
+        // Reset total points
+        $employee->update(['total_points' => 0]);
+
+        return back()->with('success', 'Employee rejected. All uploaded documents have been deleted.');
     }
 
     public function toggleUserStatus(User $user)
     {
         if ($user->employee) {
             $newStatus = $user->employee->status === 'suspended' ? 'active' : 'suspended';
+
+            // Block reactivation if employee doesn't meet the 12-point minimum
+            if ($newStatus !== 'pending' && $user->employee->total_points < 12) {
+                return back()->withErrors('Cannot modify status: employee has ' . $user->employee->total_points . '/15 points. Minimum 12 points required.');
+            }
+
             $user->employee->update(['status' => $newStatus]);
             return back()->with('success', "Caregiver has been {$newStatus}.");
         } elseif ($user->family) {
@@ -91,12 +177,14 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalUsers = User::whereDoesntHave('admin')->count();
-        $pendingCount = Employee::where('status', 'pending')->count();
+        $pendingCount = Employee::where('status', 'pending')->has('documents')->count();
         $approvedCount = Employee::where('status', 'active')->count();
         $reportsCount = Report::where('status', 'active')->count();
         
+        // Only show pending employees who have uploaded at least one document
         $pendingEmployees = Employee::with(['user', 'documents'])
             ->where('status', 'pending')
+            ->has('documents')
             ->latest()
             ->take(10)
             ->get();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -83,26 +83,52 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8 items-center">
+                <div class="hidden md:flex items-center gap-6">
                     <a href="#features"
-                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">How it
-                        works</a>
+                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">{{ __('How it works') }}</a>
                     <a href="#benefits"
-                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Benefits</a>
+                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">{{ __('Benefits') }}</a>
                     <a href="#testimonials"
-                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Reviews</a>
-                    <button onclick="openAuthModal()"
-                        class="ml-4 px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-xl shadow-slate-900/20 transition-transform active:scale-95">
-                        Log In / Sign Up
-                    </button>
+                        class="text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">{{ __('Reviews') }}</a>
+
+                    {{-- Language Switcher --}}
+                    <a href="{{ route('lang.switch', app()->getLocale() === 'en' ? 'ar' : 'en') }}"
+                       class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:border-brand-300 hover:bg-brand-50 text-slate-600 hover:text-brand-600 transition-all text-xs font-bold">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                        {{ app()->getLocale() === 'en' ? 'عربي' : 'EN' }}
+                    </a>
+
+                    @auth
+                        <a href="@if(Auth::user()->isAdmin()){{ route('admin.dashboard') }}@elseif(Auth::user()->isEmployee()){{ route('employee.dashboard') }}@else{{ route('family.dashboard') }}@endif"
+                            class="px-6 py-2.5 rounded-full bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm shadow-xl shadow-brand-500/20 transition-transform active:scale-95">
+                            {{ __('My Dashboard') }}
+                        </a>
+                    @else
+                        <button onclick="openAuthModal()"
+                            class="px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-xl shadow-slate-900/20 transition-transform active:scale-95">
+                            {{ __('Log In / Sign Up') }}
+                        </button>
+                    @endauth
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button onclick="openAuthModal()"
-                        class="px-5 py-2 rounded-full bg-brand-600 text-white font-bold text-sm shadow-md active:scale-95 transition-transform">
-                        Portal
-                    </button>
+                <div class="md:hidden flex items-center gap-2">
+                    <a href="{{ route('lang.switch', app()->getLocale() === 'en' ? 'ar' : 'en') }}"
+                       class="flex items-center gap-1 px-2.5 py-2 rounded-full border border-slate-200 text-slate-600 text-xs font-bold transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                        {{ app()->getLocale() === 'en' ? 'AR' : 'EN' }}
+                    </a>
+                    @auth
+                        <a href="@if(Auth::user()->isAdmin()){{ route('admin.dashboard') }}@elseif(Auth::user()->isEmployee()){{ route('employee.dashboard') }}@else{{ route('family.dashboard') }}@endif"
+                            class="px-5 py-2 rounded-full bg-brand-600 text-white font-bold text-sm shadow-md active:scale-95 transition-transform">
+                            {{ __('My Dashboard') }}
+                        </a>
+                    @else
+                        <button onclick="openAuthModal()"
+                            class="px-5 py-2 rounded-full bg-brand-600 text-white font-bold text-sm shadow-md active:scale-95 transition-transform">
+                            {{ __('Portal') }}
+                        </button>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -127,43 +153,42 @@
                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                     </span>
-                    Trusted by {{ number_format($stats['families_joined']) }}+ Families
+                    {{ __('Trusted by') }} {{ number_format($stats['families_joined']) }}+ {{ __('Families') }}
                 </div>
 
                 <h1
                     class="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-slate-900 tracking-tight leading-[1.1] mb-8">
-                    Premium Care for the <br class="hidden sm:block" />
-                    <span class="text-gradient">People You Love Most.</span>
+                    {{ __('Premium Care for the') }} <br class="hidden sm:block" />
+                    <span class="text-gradient">{{ __('People You Love Most.') }}</span>
                 </h1>
 
                 <p class="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-                    The safest platform connecting families with {{ number_format($stats['verified_caregivers']) }} verified, highly-qualified childcare and elderly care
-                    professionals across the country.
+                    {{ __('The safest platform connecting families with :count verified, highly-qualified childcare and elderly care professionals across the country.', ['count' => number_format($stats['verified_caregivers'])]) }}
                 </p>
 
                 <!-- Quick Search Widget -->
                 <div class="max-w-3xl mx-auto mb-12 p-2 bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-2">
                     <div class="flex-1 flex items-center px-4 gap-3 border-b md:border-b-0 md:border-r border-slate-100">
                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-1.998 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <input type="text" id="quick-wilaya" placeholder="Enter your Wilaya..." class="w-full py-3 outline-none text-sm font-medium text-slate-700 bg-transparent">
+                        <input type="text" id="quick-wilaya" placeholder="{{ __('Enter your Wilaya...') }}" class="w-full py-3 outline-none text-sm font-medium text-slate-700 bg-transparent">
                     </div>
                     <div class="flex-1 flex items-center px-4 gap-3">
                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 12a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM4 18a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"></path></svg>
                         <select id="quick-service" class="w-full py-3 outline-none text-sm font-medium text-slate-700 bg-transparent cursor-pointer">
-                            <option value="">Select Service</option>
-                            <option value="Child Care">Child Care</option>
-                            <option value="Elderly Care">Elderly Care</option>
+                            <option value="">{{ __('Select Service') }}</option>
+                            <option value="Child Care">{{ __('Child Care') }}</option>
+                            <option value="Elderly Care">{{ __('Elderly Care') }}</option>
                         </select>
                     </div>
                     <button onclick="executeQuickSearch()" class="px-8 py-3 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold transition-all active:scale-95">
-                        Search
+                        {{ __('Search') }}
                     </button>
                 </div>
 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                     <button onclick="openAuthModal()"
                         class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-lg shadow-xl shadow-brand-500/30 transition-transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2">
-                        Find a Caregiver
+                        {{ __('Find a Caregiver') }}
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -171,7 +196,7 @@
                     </button>
                     <button onclick="openAuthModal()"
                         class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-lg shadow-lg border border-slate-100 transition-transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2">
-                        Apply to Work
+                        {{ __('Apply to Work') }}
                     </button>
                 </div>
 
@@ -183,8 +208,8 @@
     <section id="features" class="py-20 bg-white relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-4">Why Families Trust Us</h2>
-                <p class="text-slate-500 font-medium">We built our platform around safety, transparency, and quality.
+                <h2 class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-4">{{ __('Why Families Trust Us') }}</h2>
+                <p class="text-slate-500 font-medium">{{ __('We built our platform around safety, transparency, and quality.') }}
                 </p>
             </div>
 
@@ -200,9 +225,8 @@
                             </path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">100% Background Checked</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Every caregiver undergoes a rigorous identity
-                        verification, criminal background check, and diploma validation process by our dedicated admins.
+                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">{{ __('100% Background Checked') }}</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm">{{ __('Every caregiver undergoes a rigorous identity verification, criminal background check, and diploma validation process by our dedicated admins.') }}
                     </p>
                 </div>
 
@@ -216,9 +240,8 @@
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">Instant Booking & Pricing</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Submit your care requirements and receive highly
-                        accurate upfront pricing. No hidden fees, completely transparent hourly and daily rates.</p>
+                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">{{ __('Instant Booking & Pricing') }}</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm">{{ __('Submit your care requirements and receive highly accurate upfront pricing. No hidden fees, completely transparent hourly and daily rates.') }}</p>
                 </div>
 
                 <!-- Feature 3 -->
@@ -232,9 +255,8 @@
                             </path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">Trusted Ratings</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">After every assignment, families rate their
-                        caregiver. This drives a culture of excellence and helps you select only the best professionals.
+                    <h3 class="text-xl font-display font-bold text-slate-900 mb-3">{{ __('Trusted Ratings') }}</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm">{{ __('After every assignment, families rate their caregiver. This drives a culture of excellence and helps you select only the best professionals.') }}
                     </p>
                 </div>
             </div>
@@ -245,8 +267,8 @@
     <section class="py-20 bg-slate-50 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-4">Our Top-Rated Professionals</h2>
-                <p class="text-slate-500 font-medium">Meet some of the most trusted caregivers on our platform.</p>
+                <h2 class="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-4">{{ __('Our Top-Rated Professionals') }}</h2>
+                <p class="text-slate-500 font-medium">{{ __('Meet some of the most trusted caregivers on our platform.') }}</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -261,9 +283,9 @@
                         </div>
                     </div>
                     <h3 class="font-bold text-slate-900 mb-1">{{ $caregiver->user->name }}</h3>
-                    <p class="text-xs text-slate-500 mb-4 capitalize">Verified Professional</p>
+                    <p class="text-xs text-slate-500 mb-4 capitalize">{{ __('Verified Professional') }}</p>
                     <button onclick="openAuthModal()" class="w-full py-2 bg-slate-50 hover:bg-brand-50 text-slate-600 hover:text-brand-600 rounded-xl text-xs font-bold transition-colors">
-                        View Profile
+                        {{ __('View Profile') }}
                     </button>
                 </div>
                 @endforeach
@@ -277,11 +299,11 @@
             class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-600/20 rounded-full blur-[120px] pointer-events-none">
         </div>
         <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <h2 class="text-4xl sm:text-5xl font-display font-black text-white mb-6">Ready to get started?</h2>
-            <p class="text-slate-400 text-lg mb-10">Join thousands of families relying on us for peace of mind.</p>
+            <h2 class="text-4xl sm:text-5xl font-display font-black text-white mb-6">{{ __('Ready to get started?') }}</h2>
+            <p class="text-slate-400 text-lg mb-10">{{ __('Join thousands of families relying on us for peace of mind.') }}</p>
             <button onclick="openAuthModal()"
                 class="px-10 py-5 rounded-2xl bg-brand-500 hover:bg-brand-400 text-white font-bold text-xl shadow-xl shadow-brand-500/20 transition-transform active:scale-95">
-                Create Free Account
+                {{ __('Create Free Account') }}
             </button>
         </div>
     </section>
@@ -316,40 +338,39 @@
                             </path>
                         </svg>
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-800 mb-2">Welcome</h2>
-                    <p class="text-slate-500 font-medium text-sm">Please login or create an account.</p>
+                    <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-800 mb-2">{{ __('Welcome') }}</h2>
+                    <p class="text-slate-500 font-medium text-sm">{{ __('Please login or create an account.') }}</p>
                 </div>
 
                 <!-- Form Toggle Tabs (Targeted by auth.js) -->
                 <div class="flex p-1 bg-slate-100 rounded-xl mb-6">
                     <button id="login-toggle"
-                        class="active flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all">Login</button>
+                        class="active flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all">{{ __('Login') }}</button>
                     <button id="register-toggle"
-                        class="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all">Register</button>
+                        class="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all">{{ __('Register') }}</button>
                 </div>
 
                 <!-- Login Form -->
                 <form method="POST" action="{{ route('login.submit') }}" id="login-form" class="space-y-4 sm:space-y-5 block">
                     @csrf
                     <div class="space-y-1">
-                        <label for="login-email" class="block text-sm font-semibold text-slate-700">Email</label>
+                        <label for="login-email" class="block text-sm font-semibold text-slate-700">{{ __('Email') }}</label>
                         <input type="email" name="email" id="login-email" placeholder="mail@example.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
                         <div class="flex justify-between items-center">
                             <label for="login-password"
-                                class="block text-sm font-semibold text-slate-700">Password</label>
+                                class="block text-sm font-semibold text-slate-700">{{ __('Password') }}</label>
                             <a href="#"
-                                class="text-xs font-semibold text-brand-600 hover:text-brand-500 transition-colors">Forgot
-                                Pwd?</a>
+                                class="text-xs font-semibold text-brand-600 hover:text-brand-500 transition-colors">{{ __('Forgot Pwd?') }}</a>
                         </div>
                         <input type="password" name="password" id="login-password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <button type="submit"
                         class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-base shadow-lg shadow-brand-500/20 active:scale-95 transition-transform mt-4">
-                        Sign In
+                        {{ __('Sign In') }}
                     </button>
                 </form>
             
@@ -357,41 +378,39 @@
                 <form method="POST" action="{{ route('register') }}" id="register-form" class="space-y-4 sm:space-y-5 hidden">
                     @csrf
                     <div class="space-y-1">
-                        <label for="reg-name" class="block text-sm font-semibold text-slate-700">Full Name</label>
-                        <input type="text" name="name" id="reg-name" placeholder="John Doe" required
+                        <label for="reg-name" class="block text-sm font-semibold text-slate-700">{{ __('Full Name') }}</label>
+                        <input type="text" name="name" id="reg-name" placeholder="{{ __('John Doe') }}" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
-                        <label for="reg-email" class="block text-sm font-semibold text-slate-700">Email Address</label>
+                        <label for="reg-email" class="block text-sm font-semibold text-slate-700">{{ __('Email Address') }}</label>
                         <input type="email" name="email" id="reg-email" placeholder="example@domain.com" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
                     <div class="space-y-1">
-                        <label for="reg-password" class="block text-sm font-semibold text-slate-700">Password</label>
+                        <label for="reg-password" class="block text-sm font-semibold text-slate-700">{{ __('Password') }}</label>
                         <input type="password" name="password" id="reg-password" placeholder="••••••••" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="pt-2">
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">I want to...</label>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">{{ __('I want to...') }}</label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="cursor-pointer group relative">
                                 <input type="radio" name="role" value="family" class="peer sr-only" checked>
                                 <div
                                     class="p-3 text-center bg-white border-2 border-slate-200 rounded-xl peer-checked:border-brand-500 peer-checked:bg-brand-50 group-hover:bg-slate-50 transition-all flex flex-col items-center justify-center gap-0.5 h-full">
-                                    <span class="font-bold text-slate-800 peer-checked:text-brand-700 text-sm">Look for
-                                        care</span>
-                                    <span class="text-[10px] font-semibold text-slate-500 uppercase">(Family)</span>
+                                    <span class="font-bold text-slate-800 peer-checked:text-brand-700 text-sm">{{ __('Look for care') }}</span>
+                                    <span class="text-[10px] font-semibold text-slate-500 uppercase">({{ __('Family') }})</span>
                                 </div>
                             </label>
                             <label class="cursor-pointer group relative">
                                 <input type="radio" name="role" value="employee" class="peer sr-only">
                                 <div
                                     class="p-3 text-center bg-white border-2 border-slate-200 rounded-xl peer-checked:border-brand-500 peer-checked:bg-brand-50 group-hover:bg-slate-50 transition-all flex flex-col items-center justify-center gap-0.5 h-full">
-                                    <span class="font-bold text-slate-800 peer-checked:text-brand-700 text-sm">Provide
-                                        care</span>
+                                    <span class="font-bold text-slate-800 peer-checked:text-brand-700 text-sm">{{ __('Provide care') }}</span>
                                     <span
-                                        class="text-[10px] font-semibold text-slate-500 uppercase">(Professional)</span>
+                                        class="text-[10px] font-semibold text-slate-500 uppercase">({{ __('Professional') }})</span>
                                 </div>
                             </label>
                         </div>
@@ -399,7 +418,7 @@
 
                     <button type="submit"
                         class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-base shadow-xl shadow-slate-900/20 active:scale-95 transition-transform mt-4">
-                        Create Account
+                        {{ __('Create Account') }}
                     </button>
                 </form>
             </div>
@@ -415,7 +434,7 @@
             const service = document.getElementById('quick-service').value;
 
             if (!wilaya && !service) {
-                alert('Please enter a Wilaya or select a service.');
+                alert('{{ __('Please enter a Wilaya or select a service.') }}');
                 return;
             }
 

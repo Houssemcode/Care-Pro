@@ -1,21 +1,21 @@
 <x-layouts.employee active="reports">
-    @section('title', 'My Reports')
+    @section('title', __('My Reports'))
 
     {{-- Account Status Alert --}}
     @if(Auth::user()->employee->status === 'active')
         <x-employee.page-header 
-            breadcrumb="Account" 
-            title="My Reports" 
-            subtitle="Track disputes or reports involving your account." 
+            breadcrumb="{{ __('Account') }}" 
+            title="{{ __('My Reports') }}" 
+            subtitle="{{ __('Track disputes or reports involving your account.') }}" 
         />
 
         {{-- Filters --}}
         <div class="flex gap-4 mb-6">
             <a href="{{ route('employee.reports', ['filter' => 'sent']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'sent' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
-                Sent by Me
+                {{ __('Sent by Me') }}
             </a>
             <a href="{{ route('employee.reports', ['filter' => 'received']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all {{ $filter === 'received' ? 'bg-slate-900 text-white shadow-lg' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
-                Received Reports
+                {{ __('Received Reports') }}
             </a>
         </div>
 
@@ -31,12 +31,12 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
                         <div>
-                            <h3 class="font-display font-bold text-lg text-slate-800">{{ $report->report_reason ?? 'Dispute Filed' }}</h3>
+                            <h3 class="font-display font-bold text-lg text-slate-800">{{ $report->report_reason ?? __('Dispute Filed') }}</h3>
                             <p class="text-xs text-slate-500 font-medium mt-0.5">
                                 @if($filter === 'sent')
-                                    Reported Family: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? 'Family ID: ' . $report->family_id }}</span>
+                                    {{ __('Reported Family') }}: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? __('Family ID') . ': ' . $report->family_id }}</span>
                                 @else
-                                    Reported by: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? 'Family ID: ' . $report->family_id }}</span> 
+                                    {{ __('Reported by') }}: <span class="text-slate-700 font-bold">{{ $report->family->user->name ?? __('Family ID') . ': ' . $report->family_id }}</span> 
                                 @endif
                                 <span class="mx-1">•</span> 
                                 {{ \Carbon\Carbon::parse($report->created_at)->format('M d, Y') }}
@@ -48,11 +48,11 @@
                     <div class="shrink-0 self-start sm:self-auto">
                         @if($report->status === 'resolved')
                             <span class="inline-flex px-3 py-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg ring-1 ring-inset ring-emerald-500/20 uppercase tracking-wider">
-                                Resolved by Admin
+                                {{ __('Resolved by Admin') }}
                             </span>
                         @else
                             <span class="inline-flex px-3 py-1.5 text-[10px] font-bold text-amber-700 bg-amber-50 rounded-lg ring-1 ring-inset ring-amber-500/20 uppercase tracking-wider">
-                                Under Review
+                                {{ __('Under Review') }}
                             </span>
                         @endif
                     </div>
@@ -60,16 +60,16 @@
                 
                 <!-- Comment Box -->
                 <div class="bg-slate-50 rounded-xl p-5 border border-slate-100 relative">
-                    <svg class="absolute top-4 left-4 w-6 h-6 text-slate-200" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z"></path></svg>
-                    <p class="text-sm text-slate-600 leading-relaxed pl-10 italic">
-                        "{{ $report->description ?? 'No additional description provided.' }}"
+                    <svg class="absolute top-4 rtl:right-4 ltr:left-4 w-6 h-6 text-slate-200" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z"></path></svg>
+                    <p class="text-sm text-slate-600 leading-relaxed rtl:pr-10 ltr:pl-10 italic">
+                        "{{ $report->description ?? __('No additional description provided.') }}"
                     </p>
                 </div>
                 
                 <!-- Admin Resolution Note (If exists) -->
                 @if($report->status === 'resolved' && !empty($report->admin_note))
                     <div class="mt-4 pt-4 border-t border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Resolution Note</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{{ __('Admin Resolution Note') }}</p>
                         <p class="text-sm font-medium text-emerald-700 bg-emerald-50/50 p-3 rounded-lg border border-emerald-100">{{ $report->admin_note }}</p>
                     </div>
                 @endif
@@ -81,8 +81,8 @@
                 <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner border border-emerald-100">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h3 class="font-display font-bold text-xl text-slate-800 mb-1">Clean Record!</h3>
-                <p class="text-slate-500 font-medium text-sm">There are no reports in this category.</p>
+                <h3 class="font-display font-bold text-xl text-slate-800 mb-1">{{ __('Clean Record!') }}</h3>
+                <p class="text-slate-500 font-medium text-sm">{{ __('There are no reports in this category.') }}</p>
             </div>
             @endforelse
 
@@ -99,8 +99,8 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
             <div>
-                <h3 class="text-lg font-bold text-amber-800 font-display">Account Pending Approval</h3>
-                <p class="text-sm text-amber-700 mt-1 leading-relaxed">Your account is currently under review by our administration team. You will not appear in search results or receive booking requests until your account is activated.</p>
+                <h3 class="text-lg font-bold text-amber-800 font-display">{{ __('Account Pending Approval') }}</h3>
+                <p class="text-sm text-amber-700 mt-1 leading-relaxed">{{ __('Your account is currently under review by our administration team. You will not appear in search results or receive booking requests until your account is activated.') }}</p>
             </div>
         </div>
     @endif

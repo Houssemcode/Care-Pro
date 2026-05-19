@@ -22,6 +22,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 | Authentication Routes
 |--------------------------------------------------------------------------
 */
+// Language Switcher
+Route::get('lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
+
 Route::get('/login', [HomeController::class, 'index'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -30,7 +33,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/register-admin', function () {
     return view('auth.register_admin');
-})->name('register.admin');
+})->middleware('guest')->name('register.admin');
 
 // Register Routes
 Route::post('/register-admin', [AuthController::class, 'registerAdmin'])->name('register.admin.submit');
@@ -112,7 +115,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/users',     [AdminController::class, 'users'])->name('users');   
     
     Route::patch('/users/{user}/approve', [AdminController::class, 'approveEmployee'])->name('users.approve');
+    Route::patch('/users/{user}/reject', [AdminController::class, 'rejectEmployee'])->name('users.reject');
     Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
+    Route::patch('/employees/{employee}/documents/points', [AdminController::class, 'updateAllDocumentPoints'])->name('employees.documents.points');
     
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::patch('/reports/{report}/resolve', [AdminController::class, 'resolveReport'])->name('reports.resolve');

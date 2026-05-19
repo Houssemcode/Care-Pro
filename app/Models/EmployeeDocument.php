@@ -10,6 +10,7 @@ class EmployeeDocument extends Model
         'employee_id',
         'document_type',
         'file_path',
+        'points',
     ];
 
     public function employee()

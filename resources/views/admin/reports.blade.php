@@ -1,10 +1,10 @@
-<x-layouts.admin active="reports" title="System Reports">
-    @section('title', 'Reports & Disputes')
+<x-layouts.admin active="reports" title="{{ __('System Reports') }}">
+    @section('title', __('Reports & Disputes'))
 
     <x-admin.page-header 
-        breadcrumb="Reports" 
-        title="System Reports" 
-        subtitle="Review disputes initiated by families against caregivers." 
+        breadcrumb="{{ __('Reports') }}" 
+        title="{{ __('System Reports') }}" 
+        subtitle="{{ __('Review disputes initiated by families against caregivers.') }}" 
     />
 
     <!-- Filters Section -->
@@ -13,19 +13,19 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Search -->
                 <div class="md:col-span-2 relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                    <div class="absolute inset-y-0 left-0 rtl:left-auto rtl:right-0 pl-4 rtl:pl-0 rtl:pr-4 flex items-center pointer-events-none text-slate-400">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by ID, Family, or Caregiver..."
-                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search by ID, Family, or Caregiver...') }}"
+                        class="w-full pl-11 rtl:pl-4 rtl:pr-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                 </div>
 
                 <!-- Status Dropdown -->
                 <div>
-                    <select name="status" onchange="this.form.submit()" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
-                        <option value="">All Statuses</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active (Unresolved)</option>
-                        <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>Resolved</option>
+                    <select name="status" onchange="this.form.submit()" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-slate-50 focus:bg-white outline-none transition-all font-medium text-sm appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] rtl:bg-[left_16px_center] bg-no-repeat rtl:pl-10">
+                        <option value="">{{ __('All Statuses') }}</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active (Unresolved)') }}</option>
+                        <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>{{ __('Resolved') }}</option>
                     </select>
                 </div>
             </div>
@@ -38,19 +38,19 @@
             <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 flex-shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-lg font-display font-bold text-slate-900">Submitted Reports</h3>
+            <h3 class="text-lg font-display font-bold text-slate-900">{{ __('Submitted Reports') }}</h3>
         </div>
 
         <div class="overflow-x-auto custom-scrollbar flex-1 w-full">
             <table class="w-full text-left border-collapse min-w-[900px]">
                 <thead>
                     <tr>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">ID & Date</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reporter</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reported User</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Reason & Details</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50">Status</th>
-                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 text-right">Actions</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 rtl:text-right">{{ __('ID & Date') }}</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 rtl:text-right">{{ __('Reporter') }}</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 rtl:text-right">{{ __('Reported User') }}</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 rtl:text-right">{{ __('Reason & Details') }}</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 rtl:text-right">{{ __('Status') }}</th>
+                        <th class="px-8 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 text-right">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
@@ -62,38 +62,38 @@
                         </td>
                         <td class="px-8 py-4">
                             @if($report->reporter_type === 'family')
-                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? 'Unknown Family' }}</span><br>
-                                <span class="text-slate-500 text-[10px]">Family (ID: {{ $report->family_id }})</span>
+                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? __('Unknown Family') }}</span><br>
+                                <span class="text-slate-500 text-[10px]">{{ __('Family') }} (ID: {{ $report->family_id }})</span>
                             @else
-                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? 'Unknown Caregiver' }}</span><br>
-                                <span class="text-slate-500 text-[10px]">Caregiver (ID: {{ $report->employee_id }})</span>
+                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? __('Unknown Caregiver') }}</span><br>
+                                <span class="text-slate-500 text-[10px]">{{ __('Caregiver') }} (ID: {{ $report->employee_id }})</span>
                             @endif
                         </td>
                         <td class="px-8 py-4">
                             @if($report->reporter_type === 'family')
-                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? 'Unknown Caregiver' }}</span><br>
-                                <span class="text-slate-500 text-[10px]">Caregiver (ID: {{ $report->employee_id }})</span>
+                                <span class="font-bold text-slate-800">{{ $report->employee->user->name ?? __('Unknown Caregiver') }}</span><br>
+                                <span class="text-slate-500 text-[10px]">{{ __('Caregiver') }} (ID: {{ $report->employee_id }})</span>
                             @else
-                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? 'Unknown Family' }}</span><br>
-                                <span class="text-slate-500 text-[10px]">Family (ID: {{ $report->family_id }})</span>
+                                <span class="font-bold text-slate-800">{{ $report->family->user->name ?? __('Unknown Family') }}</span><br>
+                                <span class="text-slate-500 text-[10px]">{{ __('Family') }} (ID: {{ $report->family_id }})</span>
                             @endif
                         </td>
                         <td class="px-8 py-4 max-w-[250px]">
-                            <span class="font-bold text-rose-600/90 text-xs">{{ $report->rapport_reason ?? $report->report_reason ?? 'Dispute' }}</span>
+                            <span class="font-bold text-rose-600/90 text-xs">{{ $report->rapport_reason ?? $report->report_reason ?? __('Dispute') }}</span>
                             <p class="text-[11px] text-slate-500 line-clamp-2 mt-1" title="{{ $report->description }}">{{ $report->description }}</p>
                         </td>
                         <td class="px-8 py-4">
                             <span class="inline-flex px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $report->status === 'active' ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-500/20' : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500/20' }}">
-                                {{ ucfirst($report->status) }}
+                                {{ __(ucfirst($report->status)) }}
                             </span>
                         </td>
                         <td class="px-8 py-4 text-right space-x-1">
                             <div class="flex items-center justify-end gap-2">
                                 @php
-                                    $reporterName = $report->reporter_type === 'family' ? ($report->family->user->name ?? 'Unknown Family') : ($report->employee->user->name ?? 'Unknown Caregiver');
-                                    $reportedName = $report->reporter_type === 'family' ? ($report->employee->user->name ?? 'Unknown Caregiver') : ($report->family->user->name ?? 'Unknown Family');
-                                    $reporterLabel = $reporterName . ' (' . ucfirst($report->reporter_type) . ')';
-                                    $reportedType = $report->reporter_type === 'family' ? 'Caregiver' : 'Family';
+                                    $reporterName = $report->reporter_type === 'family' ? ($report->family->user->name ?? __('Unknown Family')) : ($report->employee->user->name ?? __('Unknown Caregiver'));
+                                    $reportedName = $report->reporter_type === 'family' ? ($report->employee->user->name ?? __('Unknown Caregiver')) : ($report->family->user->name ?? __('Unknown Family'));
+                                    $reporterLabel = $reporterName . ' (' . __(ucfirst($report->reporter_type)) . ')';
+                                    $reportedType = $report->reporter_type === 'family' ? __('Caregiver') : __('Family');
                                     $reportedLabel = $reportedName . ' (' . $reportedType . ')';
                                     $reportedUserId = $report->reporter_type === 'family' ? ($report->employee->user->id ?? 0) : ($report->family->user->id ?? 0);
                                 @endphp
@@ -102,22 +102,22 @@
                                         '{{ $report->id }}',
                                         '{{ addslashes($reporterLabel) }}',
                                         '{{ addslashes($reportedLabel) }}',
-                                        '{{ addslashes($report->rapport_reason ?? $report->report_reason ?? 'Dispute') }}',
+                                        '{{ addslashes($report->rapport_reason ?? $report->report_reason ?? __('Dispute')) }}',
                                         '{{ addslashes(str_replace(["\r", "\n"], ' ', $report->description ?? '')) }}'
                                     )">
-                                    Details
+                                    {{ __('Details') }}
                                 </button>
                                 
                                 @if($report->status === 'active')
-                                    <button class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition-all border border-brand-100 active:scale-95" onclick="openResolveModal('{{ $report->id }}')">Resolve</button>
+                                    <button class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition-all border border-brand-100 active:scale-95" onclick="openResolveModal('{{ $report->id }}')">{{ __('Resolve') }}</button>
                                 @endif
                                 
-                                <button class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all border border-rose-100 active:scale-95" onclick="openConfirm('ban', '{{ $reportedUserId }}', '{{ addslashes($reportedName) }}', '{{ $reportedType }}')">Ban {{ $reportedType }}</button>
+                                <button class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all border border-rose-100 active:scale-95" onclick="openConfirm('ban', '{{ $reportedUserId }}', '{{ addslashes($reportedName) }}', '{{ $reportedType }}')">{{ __('Ban') }} {{ $reportedType }}</button>
                             </div>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="text-center py-10 text-slate-400 italic text-sm">No reports match your current filters.</td></tr>
+                    <tr><td colspan="6" class="text-center py-10 text-slate-400 italic text-sm">{{ __('No reports match your current filters.') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -132,7 +132,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h3 class="font-display font-bold text-lg text-slate-800">Report Details</h3>
+                    <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Report Details') }}</h3>
                     <p class="text-[11px] text-slate-500 font-medium mt-0.5" id="detail-id"></p>
                 </div>
                 <button onclick="closeModal('modal-details')" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
@@ -140,21 +140,21 @@
             <div class="modal-body space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
-                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reporter</h4>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{{ __('Reporter') }}</h4>
                         <p class="text-sm font-bold text-slate-800" id="detail-family"></p>
                     </div>
                     <div class="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
-                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reported User</h4>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{{ __('Reported User') }}</h4>
                         <p class="text-sm font-bold text-slate-800" id="detail-caregiver"></p>
                     </div>
                 </div>
                 <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl">
-                    <h4 class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-2">Complaint</h4>
+                    <h4 class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-2">{{ __('Complaint') }}</h4>
                     <p class="text-sm font-bold text-rose-900 mb-2" id="detail-reason"></p>
                     <p class="text-xs text-rose-700/80 leading-relaxed italic" id="detail-comment"></p>
                 </div>
             </div>
-            <div class="modal-footer"><button onclick="closeModal('modal-details')" class="px-4 py-2 text-sm font-bold text-slate-500">Close</button></div>
+            <div class="modal-footer"><button onclick="closeModal('modal-details')" class="px-4 py-2 text-sm font-bold text-slate-500">{{ __('Close') }}</button></div>
         </div>
     </div>
 
@@ -163,16 +163,16 @@
             <form id="form-resolve-report" method="POST" action="">
                 @csrf @method('PATCH')
                 <div class="modal-header">
-                    <h3 class="font-display font-bold text-lg text-slate-800">Resolve Report</h3>
+                    <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Resolve Report') }}</h3>
                     <button type="button" onclick="closeModal('modal-resolve')" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
                 <div class="modal-body">
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Resolution Decision</label>
-                    <textarea name="admin_note" rows="4" placeholder="Findings or resolution details..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-white outline-none text-sm"></textarea>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('Resolution Decision') }}</label>
+                    <textarea name="admin_note" rows="4" placeholder="{{ __('Findings or resolution details...') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-white outline-none text-sm"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" onclick="closeModal('modal-resolve')" class="px-4 py-2 text-sm font-bold text-slate-500">Cancel</button>
-                    <button type="submit" class="px-6 py-2 bg-emerald-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-emerald-500/30">Resolve Report</button>
+                    <button type="button" onclick="closeModal('modal-resolve')" class="px-4 py-2 text-sm font-bold text-slate-500">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-6 py-2 bg-emerald-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-emerald-500/30">{{ __('Resolve Report') }}</button>
                 </div>
             </form>
         </div>
@@ -185,12 +185,12 @@
                 @csrf @method('PATCH')
                 <div class="px-6 py-8 text-center flex flex-col items-center">
                     <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-rose-100 text-rose-500"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
-                    <h3 class="font-display font-bold text-xl text-slate-800 mb-2">Suspend User</h3>
+                    <h3 class="font-display font-bold text-xl text-slate-800 mb-2">{{ __('Suspend User') }}</h3>
                     <p class="text-sm text-slate-500" id="confirm-message"></p>
                 </div>
                 <div class="modal-footer justify-center bg-transparent border-t-0 pt-0 gap-3">
-                    <button type="button" onclick="closeModal('modal-confirm')" class="px-4 py-2 text-sm font-bold text-slate-500">Cancel</button>
-                    <button type="submit" class="px-6 py-2 bg-rose-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-rose-500/30">Yes, Suspend</button>
+                    <button type="button" onclick="closeModal('modal-confirm')" class="px-4 py-2 text-sm font-bold text-slate-500">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-6 py-2 bg-rose-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-rose-500/30">{{ __('Yes, Suspend') }}</button>
                 </div>
             </form>
         </div>
@@ -203,7 +203,7 @@
             document.getElementById('detail-family').textContent = family;
             document.getElementById('detail-caregiver').textContent = caregiver;
             document.getElementById('detail-reason').textContent = reason;
-            document.getElementById('detail-comment').textContent = comment || "No additional comments.";
+            document.getElementById('detail-comment').textContent = comment || "{{ __('No additional comments.') }}";
             openModal('modal-details');
         }
 
@@ -213,7 +213,7 @@
         }
 
         function openConfirm(action, userId, name, type) {
-            document.getElementById('confirm-message').textContent = `Are you sure you want to suspend this ${type} (${name})? They will lose access to the platform.`;
+            document.getElementById('confirm-message').textContent = "{{ __('Are you sure you want to suspend this :type (:name)? They will lose access to the platform.', ['type' => '\"+type+\"', 'name' => '\"+name+\"']) }}".replace('"+type+"', type).replace('"+name+"', name);
             document.getElementById('form-ban-employee').action = `/admin/users/${userId}/toggle-status`;
             openModal('modal-confirm');
         }

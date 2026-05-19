@@ -2,13 +2,13 @@
     @section('title', 'My Bookings')
 
     <x-family.page-header 
-        breadcrumb="Bookings" 
-        title="My Bookings" 
-        subtitle="Track your caregiving requests and manage active contracts."
+        breadcrumb="{{ __('Bookings') }}" 
+        title="{{ __('My Bookings') }}" 
+        subtitle="{{ __('Track your caregiving requests and manage active contracts.') }}"
     >
         <x-slot name="actions">
             <a href="{{ route('family.browse') }}" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-brand-500/30 active:scale-95">
-                Find a Caregiver
+                {{ __('Find a Caregiver') }}
             </a>
         </x-slot>
     </x-family.page-header>
@@ -33,11 +33,11 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2 mb-1">
-                            <h3 class="font-display font-bold text-lg text-slate-900 group-hover:text-brand-600 transition-colors">{{ $req->offre->employee->user->name ?? 'Caregiver' }}</h3>
+                            <h3 class="font-display font-bold text-lg text-slate-900 group-hover:text-brand-600 transition-colors">{{ $req->offre->employee->user->name ?? __('Caregiver') }}</h3>
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">#REQ-{{ $req->id }}</span>
                         </div>
                         <span class="inline-flex px-2.5 py-1 text-[10px] font-bold text-brand-700 bg-brand-50 rounded-lg ring-1 ring-inset ring-brand-500/20">
-                            {{ $req->offre->service_type ?? 'Service' }}
+                            {{ $req->offre->service_type ?? __('Service') }}
                         </span>
                     </div>
                 </div>
@@ -45,11 +45,11 @@
                 {{-- Dates --}}
                 <div class="flex flex-col text-sm font-medium text-slate-600 bg-slate-50/50 p-3 sm:p-4 rounded-[1.25rem] border border-slate-100 w-full md:w-auto md:min-w-[200px]">
                     <div class="flex items-center gap-3 mb-1.5">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-8">From</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-8">{{ __('From') }}</span>
                         <span class="text-slate-800 font-bold">{{ \Carbon\Carbon::parse($req->start_date)->format('M d, Y') }}</span>
                     </div >
                     <div class="flex items-center gap-3">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-8">To</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-8">{{ __('To') }}</span>
                         <span class="text-slate-800 font-bold">{{ \Carbon\Carbon::parse($req->end_date)->format('M d, Y') }}</span>
                     </div >
                 </div >
@@ -58,43 +58,43 @@
                 <div class="flex flex-col items-start md:items-end gap-3 shrink-0">
                     @if($req->status === 'pending')
                         <span class="inline-flex px-3 py-1.5 text-[10px] font-bold text-amber-700 bg-amber-50 rounded-lg ring-1 ring-inset ring-amber-500/20 uppercase tracking-widest">
-                            Awaiting Approval
+                            {{ __('Awaiting Approval') }}
                         </span>
                         <div class="flex flex-wrap gap-3 mt-1">
                             <button onclick="openDiscussionModal({{ $req->id }}, {{ $req->messages->toJson() }})" class="text-[10px] font-bold text-slate-500 hover:text-brand-600 flex items-center gap-1.5 transition-colors uppercase tracking-widest whitespace-nowrap">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                                Price Discussion
+                                {{ __('Price Discussion') }}
                             </button>
                             <button onclick="openEditRequestModal({{ $req->id }}, '{{ $req->start_date }}', '{{ $req->end_date }}')" class="text-[10px] font-bold text-slate-500 hover:text-brand-600 flex items-center gap-1.5 transition-colors uppercase tracking-widest whitespace-nowrap">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                Edit Request
+                                {{ __('Edit Request') }}
                             </button>
                         </div>
                         
                     @elseif($req->status === 'assigned')
                         <span class="inline-flex px-3 py-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg ring-1 ring-inset ring-emerald-500/20 uppercase tracking-widest">
-                            Contract Active
+                            {{ __('Contract Active') }}
                         </span>
                         <div class="flex flex-col items-start md:items-end gap-2 mt-1">
                             <button onclick="openDiscussionModal({{ $req->id }}, {{ $req->messages->toJson() }})" class="text-[10px] font-bold text-slate-500 hover:text-brand-600 flex items-center gap-1.5 transition-colors uppercase tracking-widest">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                                Price Discussion
+                                {{ __('Price Discussion') }}
                             </button>
                             
                             <div class="flex items-center gap-3">
                                 <button onclick="openReportModal('{{ $req->offre->employee->id }}', '{{ addslashes($req->offre->employee->user->name) }}')" class="text-[10px] font-bold text-rose-500 hover:text-rose-700 uppercase tracking-widest transition-colors">
-                                    Report Issue
+                                    {{ __('Report Issue') }}
                                 </button>
                                 <span class="text-slate-200">|</span>
                                 <button onclick="openReviewModal('{{ \App\Models\AssignmentService::where('offre_id', $req->offre_id)->where('family_id', Auth::user()->family->id)->value('id') }}', '{{ addslashes($req->offre->employee->user->name) }}')" class="text-[10px] font-bold text-amber-500 hover:text-amber-600 uppercase tracking-widest transition-colors">
-                                    Leave Review
+                                    {{ __('Leave Review') }}
                                 </button>
                             </div>
                         </div>
 
                     @else
                         <span class="inline-flex px-3 py-1.5 text-[10px] font-bold text-rose-700 bg-rose-50 rounded-lg ring-1 ring-inset ring-rose-500/20 uppercase tracking-widest">
-                            Request Declined
+                            {{ __('Request Declined') }}
                         </span>
                     @endif
                 </div>
@@ -106,10 +106,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-display font-bold text-slate-800 mb-2">No Bookings Found</h3>
-                <p class="text-slate-500 font-medium text-sm mb-8">You haven't requested any caregivers yet.</p>
+                <h3 class="text-xl font-display font-bold text-slate-800 mb-2">{{ __('No Bookings Found') }}</h3>
+                <p class="text-slate-500 font-medium text-sm mb-8">{{ __('You haven\'t requested any caregivers yet.') }}</p>
                 <a href="{{ route('family.browse') }}" class="inline-flex px-8 py-3 bg-brand-600 text-white font-bold rounded-xl text-sm transition-all hover:bg-brand-700 shadow-lg shadow-brand-500/20">
-                    Browse Caregivers
+                    {{ __('Browse Caregivers') }}
                 </a>
             </div>
         @endforelse
@@ -130,36 +130,36 @@
                 <input type="hidden" name="employee_id" id="report_employee_id" value="">
                 
                 <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                    <h3 class="font-display font-bold text-lg text-slate-800">Report Caregiver</h3>
+                    <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Report Caregiver') }}</h3>
                     <button type="button" onclick="closeReportModal()" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
                 
                 <div class="p-8 space-y-6">
                     <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-rose-800">
-                        <p class="text-sm font-medium">Reporting <strong id="report_caregiver_name" class="font-bold text-rose-900">...</strong>. Our team will review this case shortly.</p>
+                        <p class="text-sm font-medium">{{ __('Reporting') }} <strong id="report_caregiver_name" class="font-bold text-rose-900">...</strong>. {{ __('Our team will review this case shortly.') }}</p>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Reason for Report <span class="text-rose-500">*</span></label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('Reason for Report') }} <span class="text-rose-500">*</span></label>
                         <select name="report_reason" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium appearance-none cursor-pointer text-slate-700 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_16px_center] bg-no-repeat pr-10">
-                            <option value="" disabled selected>Select a reason...</option>
-                            <option value="No Show / Lateness">No Show / Excessive Lateness</option>
-                            <option value="Unprofessional Behavior">Unprofessional Behavior</option>
-                            <option value="Poor Service Quality">Poor Service Quality</option>
-                            <option value="Safety Concern">Safety Concern</option>
-                            <option value="Other">Other</option>
+                            <option value="" disabled selected>{{ __('Select a reason...') }}</option>
+                            <option value="No Show / Lateness">{{ __('No Show / Excessive Lateness') }}</option>
+                            <option value="Unprofessional Behavior">{{ __('Unprofessional Behavior') }}</option>
+                            <option value="Poor Service Quality">{{ __('Poor Service Quality') }}</option>
+                            <option value="Safety Concern">{{ __('Safety Concern') }}</option>
+                            <option value="Other">{{ __('Other') }}</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Additional Details <span class="text-rose-500">*</span></label>
-                        <textarea name="description" required rows="4" placeholder="Please provide specific details about the incident..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium resize-none transition-all"></textarea>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('Additional Details') }} <span class="text-rose-500">*</span></label>
+                        <textarea name="description" required rows="4" placeholder="{{ __('Please provide specific details about the incident...') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium resize-none transition-all"></textarea>
                     </div>
                 </div>
 
                 <div class="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-end gap-3">
-                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">Cancel</button>
-                    <button type="submit" class="px-8 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-500/30 active:scale-95">Submit Report</button>
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-8 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-500/30 active:scale-95">{{ __('Submit Report') }}</button>
                 </div>
             </form>
         </div>
@@ -173,13 +173,13 @@
                 <input type="hidden" name="assignment_service_id" id="review_assignment_id" value="">
                 
                 <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                    <h3 class="font-display font-bold text-lg text-slate-800">Rate Caregiver</h3>
+                    <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Rate Caregiver') }}</h3>
                     <button type="button" onclick="closeReviewModal()" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
                 
                 <div class="p-8 space-y-8">
                     <div class="text-center">
-                        <p class="text-sm font-medium text-slate-500 mb-6">How was your experience with <strong id="review_caregiver_name" class="text-slate-900">...</strong>?</p>
+                        <p class="text-sm font-medium text-slate-500 mb-6">{{ __('How was your experience with') }} <strong id="review_caregiver_name" class="text-slate-900">...</strong>?</p>
                         
                         <div class="flex flex-row-reverse justify-center gap-3">
                             <input type="radio" id="star5" name="stars" value="5" class="peer sr-only" required />
@@ -210,14 +210,14 @@
                     </div>
                     
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Write a Review (Optional)</label>
-                        <textarea name="comment" rows="4" placeholder="Tell us what you liked about this caregiver..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium resize-none transition-all"></textarea>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('Write a Review (Optional)') }}</label>
+                        <textarea name="comment" rows="4" placeholder="{{ __('Tell us what you liked about this caregiver...') }}" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium resize-none transition-all"></textarea>
                     </div>
                 </div>
 
                 <div class="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-end gap-3">
-                    <button type="button" onclick="closeReviewModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">Cancel</button>
-                    <button type="submit" class="px-8 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-amber-500/30 active:scale-95">Submit Review</button>
+                    <button type="button" onclick="closeReviewModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-8 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-amber-500/30 active:scale-95">{{ __('Submit Review') }}</button>
                 </div>
             </form>
         </div>
@@ -230,29 +230,29 @@
                 @csrf
                 @method('PATCH')
                 <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                    <h3 class="font-display font-bold text-lg text-slate-800">Edit Booking Request</h3>
+                    <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Edit Booking Request') }}</h3>
                     <button type="button" onclick="closeEditRequestModal()" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
                 </div>
                 
                 <div class="p-8 space-y-6">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Start Date <span class="text-brand-500">*</span></label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('Start Date') }} <span class="text-brand-500">*</span></label>
                             <input type="date" name="start_date" id="edit_start_date" required min="{{ date('Y-m-d') }}"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">End Date <span class="text-brand-500">*</span></label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">{{ __('End Date') }} <span class="text-brand-500">*</span></label>
                             <input type="date" name="end_date" id="edit_end_date" required min="{{ date('Y-m-d') }}"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
                         </div>
                     </div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">Update your required timeframe.</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">{{ __('Update your required timeframe.') }}</p>
                 </div>
 
                 <div class="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-end gap-3">
-                    <button type="button" onclick="closeEditRequestModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">Cancel</button>
-                    <button type="submit" class="px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-brand-500/30 active:scale-95">Save Changes</button>
+                    <button type="button" onclick="closeEditRequestModal()" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all shadow-sm">{{ __('Cancel') }}</button>
+                    <button type="submit" class="px-8 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-brand-500/30 active:scale-95">{{ __('Save Changes') }}</button>
                 </div>
             </form>
         </div>
@@ -262,7 +262,7 @@
     <div id="modal-discussion" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4" onclick="if(event.target===this) closeDiscussionModal()">
         <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg transform scale-95 opacity-0 transition-all duration-300 flex flex-col overflow-hidden h-[600px]" id="modal-discussion-content">
             <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <h3 class="font-display font-bold text-lg text-slate-800">Price Discussion</h3>
+                <h3 class="font-display font-bold text-lg text-slate-800">{{ __('Price Discussion') }}</h3>
                 <button type="button" onclick="closeDiscussionModal()" class="text-slate-400 hover:text-slate-600 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             
@@ -271,8 +271,8 @@
             <form id="message-form" method="POST" action="" class="p-5 border-t border-slate-100 bg-white">
                 @csrf
                 <div class="flex gap-2">
-                    <input type="text" name="message" required placeholder="Type your message..." class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
-                    <button type="submit" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-md active:scale-95">Send</button>
+                    <input type="text" name="message" required placeholder="{{ __('Type your message...') }}" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500 bg-slate-50 focus:bg-white outline-none text-sm font-medium transition-all">
+                    <button type="submit" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm transition-all shadow-md active:scale-95">{{ __('Send') }}</button>
                 </div>
             </form>
         </div>
@@ -337,7 +337,7 @@
             messageContainer.innerHTML = '';
 
             if (messages.length === 0) {
-                messageContainer.innerHTML = '<div class="text-center py-10 text-slate-400 text-sm">No messages yet. Start the discussion!</div>';
+                messageContainer.innerHTML = '<div class="text-center py-10 text-slate-400 text-sm">{{ __("No messages yet. Start the discussion!") }}</div>';
             } else {
                 messages.forEach(msg => {
                     const isMe = msg.user_id === {{ Auth::id() }};
@@ -364,6 +364,57 @@
             discussionModalContent.classList.add('scale-95', 'opacity-0');
             setTimeout(() => discussionModal.classList.add('invisible', 'opacity-0'), 200);
         }
+
+        messageForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const input = this.querySelector('input[name="message"]');
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const message = input.value;
+            
+            if(!message) return;
+
+            input.disabled = true;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': this.querySelector('input[name="_token"]').value
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                if(data.success) {
+                    input.value = '';
+                    
+                    const emptyText = messageContainer.querySelector('.text-center');
+                    if(emptyText) emptyText.remove();
+
+                    const msg = data.message;
+                    const div = document.createElement('div');
+                    div.className = `flex justify-end`;
+                    div.innerHTML = `
+                        <div class="max-w-[85%] rounded-2xl px-4 py-3 text-sm bg-brand-600 text-white rounded-tr-none rtl:rounded-tl-none ltr:rounded-tr-none shadow-sm">
+                            <p class="font-medium leading-relaxed">${msg.message}</p>
+                            <span class="text-[10px] mt-1 block opacity-70 text-right rtl:text-left ltr:text-right font-bold uppercase tracking-wider">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                    `;
+                    messageContainer.appendChild(div);
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }
+            } catch(error) {
+                console.error("Error sending message", error);
+            } finally {
+                input.disabled = false;
+                submitBtn.disabled = false;
+                input.focus();
+            }
+        });
     </script>
     @endpush
 </x-layouts.family>

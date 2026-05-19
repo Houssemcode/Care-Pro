@@ -20,12 +20,12 @@
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
                             @endfor
-                            <span class="ml-2 text-slate-700 text-xs font-bold">{{ number_format($averageRating, 1) }} ({{ $ratings->count() }} Reviews)</span>
+                            <span class="mx-2 text-slate-700 text-xs font-bold rtl:mr-2 ltr:ml-2">{{ number_format($averageRating, 1) }} ({{ $ratings->count() }} {{ __('Reviews') }})</span>
                         </div>
                         <span class="text-slate-300 font-medium">|</span>
                         <span class="text-slate-600 text-sm font-bold flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                            {{ $employee->user->phone ?? 'Private Number' }}
+                            {{ $employee->user->phone ?? __('Private Number') }}
                         </span>
                     </div>
                 </div>
@@ -41,10 +41,10 @@
                     <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     </span>
-                    About Me
+                    {{ __('About Me') }}
                 </h2>
                 <p class="text-slate-600 leading-relaxed whitespace-pre-line italic">
-                    {{ $employee->description ?? 'This caregiver hasn\'t provided a description yet.' }}
+                    {{ $employee->description ?? __('This caregiver hasn\'t provided a description yet.') }}
                 </p>
             </section>
 
@@ -54,10 +54,10 @@
                         <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.921-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.784.57-1.838-.197-1.539-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                         </span>
-                        Family Reviews
+                        {{ __('Family Reviews') }}
                     </h2>
                     <div class="px-3 py-1 bg-emerald-50 rounded-lg text-[10px] font-bold text-emerald-700 uppercase tracking-widest border border-emerald-100">
-                        Verified Feedback
+                        {{ __('Verified Feedback') }}
                     </div>
                 </div>
 
@@ -88,7 +88,7 @@
                         </div>
                     @empty
                         <div class="py-12 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                            <p class="text-slate-400 font-medium">No reviews yet for this caregiver.</p>
+                            <p class="text-slate-400 font-medium">{{ __('No reviews yet for this caregiver.') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -102,22 +102,22 @@
                     <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     </span>
-                    Qualifications
+                    {{ __('Qualifications') }}
                 </h3>
                 <div class="space-y-4">
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Experience</p>
-                        <p class="text-sm font-bold text-slate-800">{{ $employee->experience ?? 'Not specified' }}</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ __('Experience') }}</p>
+                        <p class="text-sm font-bold text-slate-800">{{ $employee->experience ?? __('Not specified') }}</p>
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Diploma</p>
-                        <p class="text-sm font-bold text-slate-800">{{ $employee->diploma ?? 'Not specified' }}</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ __('Diploma') }}</p>
+                        <p class="text-sm font-bold text-slate-800">{{ $employee->diploma ?? __('Not specified') }}</p>
                     </div>
                     <div class="pt-4 border-t border-slate-100">
                         <div class="flex items-center justify-between text-xs">
-                            <span class="text-slate-400 font-bold uppercase tracking-widest">Account Status</span>
+                            <span class="text-slate-400 font-bold uppercase tracking-widest">{{ __('Account Status') }}</span>
                             <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[10px] font-bold uppercase tracking-widest border border-emerald-100">
-                                Verified
+                                {{ __('Verified') }}
                             </span>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                     <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </span>
-                    Services Provided
+                    {{ __('Services Provided') }}
                 </h3>
                 <div class="space-y-3">
                     @foreach($employee->offres as $offer)
@@ -145,8 +145,8 @@
             </div>
 
             <a href="{{ route('family.browse') }}" class="flex items-center justify-center gap-3 w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all shadow-lg shadow-slate-900/10 active:scale-95 group">
-                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                Back to Browse
+                <svg class="w-5 h-5 rtl:group-hover:translate-x-1 ltr:group-hover:-translate-x-1 rtl:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                {{ __('Back to Browse') }}
             </a>
         </div>
     </div>
