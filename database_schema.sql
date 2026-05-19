@@ -1,35 +1,41 @@
--- Create the database
+-- Care-Pro Database Schema
+-- Generated from Laravel ORM migrations
+-- Last updated: 2026-05-19
+
 CREATE DATABASE IF NOT EXISTS care_srv;
 USE care_srv;
 
--- 1. Create Base User Table
+-- ============================================================
+-- 1. Base User Table + Auth Infrastructure
+-- ============================================================
 CREATE TABLE users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(255) DEFAULT NULL,
     email_verified_at TIMESTAMP NULL DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
-    remember_token VARCHAR(100) DEFAULT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL
-);
+)
 
--- 2. Create Roles (Admins, Employees, Families) referencing users
+-- ============================================================
+-- 2. Role Tables (Admins, Employees, Families)
+-- ============================================================
 CREATE TABLE admins (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE employees (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
     experience VARCHAR(255) DEFAULT NULL,
     diploma VARCHAR(255) DEFAULT NULL,
-    description TEXT DEFAULT NULL,
+    description VARCHAR(255) DEFAULT NULL,
     status ENUM('pending', 'active', 'suspended') NOT NULL DEFAULT 'pending',
     total_points INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NULL DEFAULT NULL,
@@ -38,18 +44,20 @@ CREATE TABLE employees (
 );
 
 CREATE TABLE families (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
     status ENUM('active', 'suspended') NOT NULL DEFAULT 'active',
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 3. Create Localizations referencing users
+-- ============================================================
+-- 3. Localizations (referencing users)
+-- ============================================================
 CREATE TABLE localizations (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT UNSIGNED NOT NULL,
     wilaya VARCHAR(255) NOT NULL,
     commune VARCHAR(255) NOT NULL,
     latitude DOUBLE NOT NULL,
@@ -59,10 +67,12 @@ CREATE TABLE localizations (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 4. Create Core Services (Offres) referencing employees
+-- ============================================================
+-- 4. Core Services (Offres) referencing employees
+-- ============================================================
 CREATE TABLE offres (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    employee_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    employee_id BIGINT UNSIGNED NOT NULL,
     wilaya VARCHAR(255) NOT NULL,
     commune VARCHAR(255) NOT NULL,
     service_type ENUM('Child Care', 'Elderly Care') NOT NULL,
@@ -72,11 +82,13 @@ CREATE TABLE offres (
     FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
 );
 
--- 5. Create Requests referencing families and offres
+-- ============================================================
+-- 5. Requests (referencing families and offres)
+-- ============================================================
 CREATE TABLE requests (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    family_id BIGINT NOT NULL,
-    offre_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    family_id BIGINT UNSIGNED NOT NULL,
+    offre_id BIGINT UNSIGNED NOT NULL,
     start_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,
     status ENUM('pending', 'assigned', 'rejected') NOT NULL DEFAULT 'pending',
@@ -86,11 +98,13 @@ CREATE TABLE requests (
     FOREIGN KEY (offre_id) REFERENCES offres(id) ON DELETE CASCADE
 );
 
--- 6. Create Assignment Services referencing families and offres
+-- ============================================================
+-- 6. Assignment Services (referencing families and offres)
+-- ============================================================
 CREATE TABLE assignment_services (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    family_id BIGINT NOT NULL,
-    offre_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    family_id BIGINT UNSIGNED NOT NULL,
+    offre_id BIGINT UNSIGNED NOT NULL,
     price DECIMAL(8, 2) DEFAULT NULL,
     assigned_at DATETIME NOT NULL,
     start_date DATE NOT NULL,
@@ -102,10 +116,12 @@ CREATE TABLE assignment_services (
     FOREIGN KEY (offre_id) REFERENCES offres(id) ON DELETE CASCADE
 );
 
--- 7. Create Ratings referencing assignment_services
+-- ============================================================
+-- 7. Ratings (referencing assignment_services)
+-- ============================================================
 CREATE TABLE ratings (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    assignment_service_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    assignment_service_id BIGINT UNSIGNED NOT NULL,
     stars INT NOT NULL,
     comment TEXT DEFAULT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
@@ -113,12 +129,14 @@ CREATE TABLE ratings (
     FOREIGN KEY (assignment_service_id) REFERENCES assignment_services(id) ON DELETE CASCADE
 );
 
--- 8. Create Reports referencing admins, employees, and families
+-- ============================================================
+-- 8. Reports (referencing admins, employees, families)
+-- ============================================================
 CREATE TABLE reports (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    admin_id BIGINT DEFAULT NULL,
-    employee_id BIGINT NOT NULL,
-    family_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    admin_id BIGINT UNSIGNED DEFAULT NULL,
+    employee_id BIGINT UNSIGNED NOT NULL,
+    family_id BIGINT UNSIGNED NOT NULL,
     reporter_type ENUM('family', 'employee') NOT NULL,
     report_reason VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -130,10 +148,12 @@ CREATE TABLE reports (
     FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE
 );
 
--- 9. Create Employee Documents referencing employees
+-- ============================================================
+-- 9. Employee Documents (referencing employees)
+-- ============================================================
 CREATE TABLE employee_documents (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    employee_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    employee_id BIGINT UNSIGNED NOT NULL,
     document_type ENUM('id_card', 'certificate', 'criminal_record', 'medical_certificate', 'resume') NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     points INT NOT NULL DEFAULT 0,
@@ -142,11 +162,13 @@ CREATE TABLE employee_documents (
     FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
 );
 
--- 10. Create Booking Messages referencing requests and users
+-- ============================================================
+-- 10. Booking Messages (referencing requests and users)
+-- ============================================================
 CREATE TABLE booking_messages (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    request_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    request_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL,
