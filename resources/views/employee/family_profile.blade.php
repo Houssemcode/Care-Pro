@@ -177,7 +177,7 @@
                     </div>
 
                     @if($family->user->localization && $family->user->localization->latitude && $family->user->localization->logitude)
-                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $family->user->localization->latitude }},{{ $family->user->localization->logitude }}" target="_blank" rel="noopener"
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $family->user->localization->latitude }},{{ $family->user->localization->logitude }}" target="_blank" rel="noopener noreferrer"
                             class="flex items-center justify-center gap-3 w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-brand-500/20 active:scale-95 group">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             {{ __('Get Directions on Google Maps') }}

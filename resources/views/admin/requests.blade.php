@@ -58,7 +58,7 @@
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <div class="text-[10px] text-slate-500 font-medium truncate max-w-[150px]">{{ $req->family->user->localization?->commune ?? '' }}{{ $req->family->user->localization?->wilaya ? ', ' . $req->family->user->localization->wilaya : __('No Location') }}</div>
                                     @if($req->family->user->localization && $req->family->user->localization->latitude && $req->family->user->localization->logitude)
-                                        <a href="https://www.google.com/maps?q={{ $req->family->user->localization->latitude }},{{ $req->family->user->localization->logitude }}" target="_blank" rel="noopener"
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ $req->family->user->localization->latitude }},{{ $req->family->user->localization->logitude }}" target="_blank" rel="noopener noreferrer"
                                             class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-brand-50 text-brand-700 rounded text-[10px] font-bold hover:bg-brand-100 transition-colors ring-1 ring-inset ring-brand-500/20" title="{{ __('View on map') }}">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                             {{ __('Map') }}
