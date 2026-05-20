@@ -73,7 +73,7 @@ Care-Pro is a sophisticated, role-based ecosystem built with Laravel 11, designe
 4. **Development Server**
    ```bash
    # Start the Laravel server and Vite compiler
-   composer dev 
+   php artisan serv 
    ```
    The app will be available at `http://127.0.0.1:8000`.
 
