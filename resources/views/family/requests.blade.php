@@ -20,6 +20,12 @@
             {{ session('success') }}
         </div>
     @endif
+    @if ($errors->any())
+        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-sm font-medium flex items-center gap-3">
+            <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ $errors->first() }}
+        </div>
+    @endif
 
     {{-- Bookings List --}}
     <div class="space-y-4 sm:space-y-6">
@@ -85,10 +91,12 @@
                                 <button onclick="openReportModal('{{ $req->offre->employee->id }}', '{{ addslashes($req->offre->employee->user->name) }}')" class="text-[10px] font-bold text-rose-500 hover:text-rose-700 uppercase tracking-widest transition-colors">
                                     {{ __('Report Issue') }}
                                 </button>
-                                <span class="text-slate-200">|</span>
-                                <button onclick="openReviewModal('{{ \App\Models\AssignmentService::where('offre_id', $req->offre_id)->where('family_id', Auth::user()->family->id)->value('id') }}', '{{ addslashes($req->offre->employee->user->name) }}')" class="text-[10px] font-bold text-amber-500 hover:text-amber-600 uppercase tracking-widest transition-colors">
-                                    {{ __('Leave Review') }}
-                                </button>
+                                @if($req->assignmentService)
+                                    <span class="text-slate-200">|</span>
+                                    <button onclick="openReviewModal('{{ $req->assignmentService->id }}', '{{ addslashes($req->offre->employee->user->name) }}')" class="text-[10px] font-bold text-amber-500 hover:text-amber-600 uppercase tracking-widest transition-colors">
+                                        {{ __('Leave Review') }}
+                                    </button>
+                                @endif
                             </div>
                         </div>
 

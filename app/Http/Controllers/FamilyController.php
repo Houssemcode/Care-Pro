@@ -183,6 +183,20 @@ class FamilyController extends Controller
             ->latest()
             ->paginate(10);
 
+        // For each assigned request, attach the matching assignment_service so the
+        // review modal has a reliable ID instead of an inline query that can return null.
+        $assignedRequests = $requests->where('status', 'assigned');
+        if ($assignedRequests->isNotEmpty()) {
+            $assignments = AssignmentService::where('family_id', $familyId)
+                ->whereIn('offre_id', $assignedRequests->pluck('offre_id'))
+                ->get()
+                ->keyBy('offre_id');
+
+            foreach ($assignedRequests as $req) {
+                $req->assignmentService = $assignments->get($req->offre_id);
+            }
+        }
+
         return view('family.requests', compact('requests'));
     }
 

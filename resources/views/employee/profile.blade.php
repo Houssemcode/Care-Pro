@@ -91,11 +91,40 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="mb-6">
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{{ __('About Me') }}</p>
                     <p class="text-sm text-slate-600 leading-relaxed bg-slate-50 rounded-xl p-5 border border-slate-100 italic">
                         {{ Auth::user()->employee->description ?? __('This caregiver hasn\'t written a bio yet.') }}
                     </p>
+                </div>
+
+                {{-- Location Info --}}
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">{{ __('Location') }}</p>
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                        @if(Auth::user()->localization && Auth::user()->localization->wilaya)
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-slate-800">{{ Auth::user()->localization->commune }}, {{ Auth::user()->localization->wilaya }}</p>
+                                    @if(Auth::user()->localization->latitude && Auth::user()->localization->logitude)
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ Auth::user()->localization->latitude }},{{ Auth::user()->localization->logitude }}" target="_blank" rel="noopener noreferrer"
+                                            class="text-[10px] font-bold text-brand-600 hover:text-brand-700 transition-colors inline-flex items-center gap-1 mt-1">
+                                            {{ __('View on Map') }}
+                                            <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-sm text-slate-400 font-medium flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                                {{ __('No location set.') }} <a href="{{ route('employee.settings') }}" class="text-brand-600 font-bold hover:underline">{{ __('Set it in Settings') }}</a>
+                            </p>
+                        @endif
+                    </div>
                 </div>
             </div>
 
