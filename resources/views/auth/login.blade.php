@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Login | Care Services</title>
+    <title>{{ __('Admin Login | Care Services') }}</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,24 +44,23 @@
                             </path>
                         </svg>
                     </div>
-                    <h1 class="text-3xl font-display font-extrabold text-slate-900 mb-1">Admin Hub</h1>
-                    <p class="text-sm font-medium text-slate-500">Sign in to manage the platform.</p>
+                    <h1 class="text-3xl font-display font-extrabold text-slate-900 mb-1">{{ __('Admin Hub') }}</h1>
+                    <p class="text-sm font-medium text-slate-500">{{ __('Sign in to manage the platform.') }}</p>
                 </div>
 
                 <!-- Login Form -->
                 <form action="{{ route('admin.dashboard') }}" method="GET" class="space-y-5">
                     <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-slate-700">Email Address</label>
+                        <label class="block text-sm font-semibold text-slate-700">{{ __('Email Address') }}</label>
                         <input type="email" placeholder="admin@careservices.com" required
                             class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
                     </div>
 
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center">
-                            <label class="block text-sm font-semibold text-slate-700">Password</label>
+                            <label class="block text-sm font-semibold text-slate-700">{{ __('Password') }}</label>
                             <a href="{{ route('admin.forgot-password') }}"
-                                class="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">Forgot
-                                Password?</a>
+                                class="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">{{ __('Forgot Password?') }}</a>
                         </div>
                         <input type="password" placeholder="••••••••" required
                             class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-slate-50 focus:bg-white outline-none transition-all placeholder:text-slate-400 font-medium text-sm">
@@ -70,26 +69,25 @@
                     <div class="flex items-center gap-2 pt-1 pb-2">
                         <input type="checkbox" id="remember"
                             class="w-4 h-4 rounded appearance-none border border-slate-300 checked:bg-slate-900 checked:border-slate-900 cursor-pointer transition-colors relative after:content-[''] after:absolute after:hidden checked:after:block after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:left-[5px] after:top-[2px] after:rotate-45">
-                        <label for="remember" class="text-sm font-medium text-slate-600 cursor-pointer">Remember
-                            me</label>
+                        <label for="remember" class="text-sm font-medium text-slate-600 cursor-pointer">{{ __('Remember me') }}</label>
                     </div>
 
                     <button type="submit"
                         class="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-base shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all">
-                        Secure Sign In
+                        {{ __('Secure Sign In') }}
                     </button>
                 </form>
 
                 <div class="mt-8 text-center">
-                    <p class="text-sm font-medium text-slate-500">Need an account? <a
+                    <p class="text-sm font-medium text-slate-500">{{ __('Need an account?') }} <a
                             href="{{ route('admin.register') }}"
-                            class="text-slate-900 font-bold hover:underline">Register super admin</a></p>
+                            class="text-slate-900 font-bold hover:underline">{{ __('Register super admin') }}</a></p>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <p class="text-center text-xs text-slate-400 mt-6 font-medium">Care Services Platform &copy; 2025</p>
+        <p class="text-center text-xs text-slate-400 mt-6 font-medium">{{ __('Care Services Platform') }} &copy; 2025</p>
     </div>
 
 </body>

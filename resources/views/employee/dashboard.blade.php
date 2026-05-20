@@ -128,7 +128,7 @@
                     </div>
                     <div>
                         <h4 class="font-bold text-amber-900 text-sm mb-1">{{ __('Action Required') }}</h4>
-                        <p class="text-amber-700 text-xs mb-3 leading-relaxed">{{ __('You have :count care request(s) waiting for your approval. Please review them promptly.', ['count' => $pendingCount]) }}</p>
+                        <p class="text-amber-700 text-xs mb-3 leading-relaxed">{{ __('request-waiting-approval', ['count' => $pendingCount]) }}</p>
                         <a href="{{ route('employee.requests') }}" class="text-xs font-bold text-amber-700 hover:text-amber-900 underline underline-offset-2">{{ __('Review Requests') }}</a>
                     </div>
                 </div>
